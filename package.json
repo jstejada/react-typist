@@ -1,0 +1,23 @@
+{
+  "name": "react-typist",
+  "version": "0.1.0",
+  "description": "react component for typing animations",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/jstejada/react-typist"
+  },
+  "keywords": [
+    "react",
+    "reactjs",
+    "typing",
+    "typist",
+    "animations",
+    "animation"
+  ],
+  "author": "Juan Tejada",
+  "license": "MIT"
+}
