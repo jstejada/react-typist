@@ -28,10 +28,10 @@ module.exports = {
     ]
   },
   plugins: [
-    new ExtractTextPlugin('index.css', { allChunks: true  })
+    new ExtractTextPlugin('main.css', { allChunks: true  })
   ],
   resolve: {
-    extensions: ['', '.js', '.json', '.jsx', '.scss'],
+    extensions: ['', '.js', '.json', '.jsx'],
     modulesDirectories: ['src', 'node_modules'],
   },
 };
