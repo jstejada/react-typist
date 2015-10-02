@@ -22,23 +22,25 @@ export default class Typist extends Component {
     this.toType = utils.extractText(this.props.children);
     this.elFactories = utils.extractElementFactories(this.props.children);
     this.state = {
-      text: Array.apply(null, Array(this.toType.length)).map(()=> ''),
+      text: [],
     };
   }
 
   componentDidMount() {
     if (this.props.children) {
-      this.typeText(this.toType);
+      this.typeEach(this.toType);
     }
   }
 
-  typeText(toType) {
+  typeEach(toType) {
     utils.asyncEach(toType, (line, adv, idx)=> {
-      this.typeLine(line, idx, adv);
+      this.setState({text: this.state.text.concat([''])}, ()=> {
+        this.typeStr(line, idx, adv);
+      });
     }, this.props.onTypingDone);
   }
 
-  typeLine(line, idx, onDone = ()=>{}) {
+  typeStr(line, idx, onDone = ()=>{}) {
     utils.eachRndTimeout(
       line,
       (ch, adv)=> {
