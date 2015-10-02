@@ -6,7 +6,7 @@ export function times(tms, fn) {
   }
 }
 
-export function normalRnd({tms = 12, mean = 70, std = 25} = {}) {
+export function gaussianRnd({tms = 12, mean = 70, std = 25} = {}) {
   let sum = 0;
   times(tms, ()=> {
     sum += Math.random();
@@ -28,7 +28,7 @@ export function asyncEach(arr, iterator, onDone = ()=> {}) {
   adv();
 }
 
-export function eachRndTimeout(arr, iterator, onDone, rndFn = normalRnd) {
+export function eachRndTimeout(arr, iterator, onDone, rndFn = gaussianRnd) {
   asyncEach(arr, (el, adv)=> {
     setTimeout(()=>{
       iterator(el, adv);

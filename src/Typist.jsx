@@ -6,6 +6,7 @@ export default class Typist extends Component {
 
   static propTypes = {
     className: PropTypes.string,
+    avgTypingDelay: PropTypes.number,
     onTypingDone: PropTypes.func,
     children: PropTypes.node,
   }
@@ -44,7 +45,8 @@ export default class Typist extends Component {
         text[idx] += ch;
         this.setState({text}, adv);
       },
-      onDone
+      onDone,
+      utils.gaussianRnd.bind(null, {mean: this.props.avgTypingDelay})
     );
   }
 
