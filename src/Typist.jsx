@@ -13,6 +13,7 @@ export default class Typist extends Component {
 
   static defaultProps = {
     className: '',
+    avgTypingDelay: 70,
     onTypingDone: () => {},
   }
 
