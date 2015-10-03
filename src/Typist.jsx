@@ -1,19 +1,22 @@
 import React, {Component, PropTypes} from 'react';
+import Cursor from './Cursor';
 import * as utils from './utils';
 
 
 export default class Typist extends Component {
 
   static propTypes = {
+    children: PropTypes.node,
     className: PropTypes.string,
     avgTypingDelay: PropTypes.number,
+    cursor: PropTypes.object,
     onTypingDone: PropTypes.func,
-    children: PropTypes.node,
   }
 
   static defaultProps = {
     className: '',
     avgTypingDelay: 70,
+    cursor: {},
     onTypingDone: () => {},
   }
 
@@ -62,6 +65,7 @@ export default class Typist extends Component {
     return (
       <div className={`Typist ${className}`}>
         {els}
+        <Cursor {...this.props.cursor} />
       </div>
     );
   }
