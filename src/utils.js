@@ -1,4 +1,5 @@
 import React from 'react';
+const Console = console;
 
 export function times(tms, fn) {
   for (let idx = 0; idx < tms; idx++) {
@@ -46,15 +47,23 @@ export function exclude(obj, keys) {
   return res;
 }
 
+export function validateTypeable(obj) {
+  if (typeof obj !== 'string' && typeof obj !== 'number') {
+    Console.warn('The arguments passed as children to Typist must be ' +
+                'strings or numbers or ReacElements containing a single child of those types');
+  }
+  return obj.toString();
+}
+
 export function extractText(toType) {
   const els = Array.isArray(toType) ? toType : [toType];
 
   return els.map((el)=> {
     let val = '';
     if (React.isValidElement(el)) {
-      val = el.props.children ? el.props.children.toString() : '';
+      val = el.props.children ? validateTypeable(el.props.children) : '';
     } else {
-      val = el.toString();
+      val = validateTypeable(el);
     }
     return val;
   });
