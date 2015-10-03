@@ -7,7 +7,7 @@
     "dist": "webpack --config webpack.dist.config.js",
     "standalone": "webpack --config webpack.standalone.config.js",
     "examples": "webpack --devtool inline-source-map",
-    "dev": "webpack-dev-server --devtool inline-source-map --progress --colors --inline --hot --host 0.0.0.0 --content-base examples",
+    "start": "webpack-dev-server --devtool inline-source-map --progress --colors --inline --hot --host 0.0.0.0 --content-base examples",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
