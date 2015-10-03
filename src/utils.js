@@ -1,17 +1,11 @@
 import React from 'react';
 const Console = console;
 
-export function times(tms, fn) {
-  for (let idx = 0; idx < tms; idx++) {
-    fn();
-  }
-}
-
 export function gaussianRnd({tms = 12, mean = 70, std = 25} = {}) {
   let sum = 0;
-  times(tms, ()=> {
+  for (let idx = 0; idx < tms; idx++) {
     sum += Math.random();
-  });
+  }
   sum -= 6;
   return Math.round((sum) * std) + mean;
 }
@@ -50,7 +44,7 @@ export function exclude(obj, keys) {
 export function validateTypeable(obj) {
   if (typeof obj !== 'string' && typeof obj !== 'number') {
     Console.warn('The arguments passed as children to Typist must be ' +
-                'strings or numbers or ReacElements containing a single child of those types');
+                'strings or numbers or ReactElements containing a single child of those types');
   }
   return obj.toString();
 }
