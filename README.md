@@ -52,19 +52,18 @@ blink. To include it, you must include
 
 
 ## Children
-Typist can receive as children any combination of one or many of the following:
+Typist will animate the typing of its children in order, one after the other.
+It can receive as children any combination of one or many of the following:
 
 * `string`
 * `number`
 * `ReactElement` with a single child of type `string` or `number`
 * `ReactElement` with no children
 
-Typist will animate the typing of its children in order, one after the other.
-This allows to provide custom CSS class names and props to the elements you pass
-as children to Typist.
+You can pass any props to the ReactElement children, including your own css classes.
+This allows you to easily style your text inside Typist.
 
-#### Example
-
+e.g.:
 ```jsx
 <Typist>
   <span className="my-custom-class"> First Sentence </span>
