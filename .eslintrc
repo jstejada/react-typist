@@ -3,6 +3,11 @@
   "globals": {
     "__DEV__": true
   },
+  "env": {
+    "browser": true,
+    "node": true,
+    "jasmine": true
+  },
   "rules": {
     "react/prop-types": [2, {ignore: ["children"]}]
   }
