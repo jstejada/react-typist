@@ -73,7 +73,7 @@ export function extractElementFactories(toType) {
   const els = Array.isArray(toType) ? toType : [toType];
 
   return els.map((el, idx)=> {
-    const tag = React.isValidElement(el) ? el.type : 'p';
+    const tag = React.isValidElement(el) ? el.type : 'span';
     const props = React.isValidElement(el) ? exclude(el.props, ['children']) : {};
     props.key = [`Typist-line-${idx}`];
     return React.createElement.bind(null, tag, props);
