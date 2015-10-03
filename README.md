@@ -1,6 +1,3 @@
-[![NPM Version][npm-image]][npm-url]
-[![NPM Downloads][downloads-image]][downloads-url]
-
 # React Typist
 React component for typing animations. Wrap Typist around your text to create
 typing animations. Easily stylable and highly configurable.
