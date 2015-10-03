@@ -12,7 +12,7 @@ export default class Cursor extends Component {
 
   static defaultProps = {
     blink: true,
-    showCursor: true,
+    show: true,
     element: '|',
   }
 
@@ -22,7 +22,7 @@ export default class Cursor extends Component {
 
   render() {
     let el = null;
-    if (this.props.showCursor) {
+    if (this.props.show) {
       const blink = this.props.blink ? '--blinking' : '';
       el = (
         <span className={`Cursor${blink}`}>
