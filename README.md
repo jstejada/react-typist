@@ -48,7 +48,7 @@ or manually entering a `<script>` tag.
 #### CSS
 Typist contains a simple CSS file to make the cursor at the end of the text
 blink. To include it, you must include
-[`dist/Typist.css`](/blob/master/dist/Typist.css) in your build.
+[`dist/Typist.css`](/dist/Typist.css) in your build.
 
 
 ## Children
@@ -73,7 +73,7 @@ This allows you to easily style your text inside Typist:
 </Typist>
 ```
 
-Refer to [`examples/`](/blob/master/examples) for more examples.
+Refer to [`examples/`](/examples) for more examples.
 
 
 ## Options
@@ -125,8 +125,8 @@ Milliseconds before typing animation begins.
 
 Object containing options for cursor:
 
-* show (bool): wether to display cursor at the end of text
-* blink (bool): wether to display cursor at the end of text. You must also
+* show (bool): wether to display cursor at the end of text.
+* blink (bool): wether to add blinking animation to cursor. You must also
 include the [css](#cssBlink)
 * element (string): character to use for the cursor
 
@@ -152,10 +152,10 @@ npm run examples
 
 #### To do
 
-* [] Tests
-* [] Support delays in typing animation
-* [] Support arbitrary element trees
-* [] Support backspace animation
+* [ ] Tests
+* [ ] Support delays in typing animation
+* [ ] Support arbitrary element trees
+* [ ] Support backspace animation
 
 
 ## Running Tests
