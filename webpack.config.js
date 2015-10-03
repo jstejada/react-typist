@@ -1,10 +1,10 @@
 const path = require('path');
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const sassLoaders = [
   'css?sourceMap',
   'autoprefixer?browsers=last 2 version',
   'sass?sourceMap&includePaths[]=' +
-    encodeURIComponent(path.resolve(__dirname, './src/styles'))
+    encodeURIComponent(path.resolve(__dirname, './src'))
 ];
 
 module.exports = {
@@ -28,7 +28,7 @@ module.exports = {
     ]
   },
   plugins: [
-    new ExtractTextPlugin('main.css', { allChunks: true  })
+    new ExtractTextPlugin('main.css', {allChunks: true})
   ],
   resolve: {
     extensions: ['', '.js', '.json', '.jsx'],
