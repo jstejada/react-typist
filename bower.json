@@ -1,0 +1,57 @@
+{
+  "name": "react-typist",
+  "version": "0.1.0",
+  "authors": [
+    "Juan Tejada <juans.tejada@gmail.com>"
+  ],
+  "homepage": "https://github.com/jstejada/react-typist",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jstejada/react-typist.git"
+  },
+  "description": "Typing animations with React",
+  "main": [
+    "dist/standalone/Typist.js",
+    "dist/standalone/Typis.css"
+  ],
+  "moduleType": [
+    "amd",
+    "globals",
+    "node"
+  ],
+  "keywords": [
+    "react",
+    "reactjs",
+    "react-typist",
+    "react typist",
+    "typing",
+    "typing animation",
+    "typing animations",
+    "animation",
+    "animations",
+    "typist",
+    "typewriter",
+    "typewriter animation",
+    "typewriter animations"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "examples",
+    "node_modules",
+    "bower_components",
+    "src",
+    "test",
+    "tmp",
+    ".babelrc",
+    ".editorconfig",
+    ".eslintrc",
+    ".gitignore",
+    ".gitattributes",
+    ".travis.yml",
+    "mocha.opts",
+    "package.json",
+    "webpack.config.js",
+    "webpack.dist.config.js",
+    "webpack.standalone.config.js"
+  ]
+}
