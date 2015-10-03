@@ -9,6 +9,7 @@ export default class Typist extends Component {
     children: PropTypes.node,
     className: PropTypes.string,
     avgTypingDelay: PropTypes.number,
+    startDelay: PropTypes.number,
     cursor: PropTypes.object,
     onTypingDone: PropTypes.func,
   }
@@ -16,6 +17,7 @@ export default class Typist extends Component {
   static defaultProps = {
     className: '',
     avgTypingDelay: 70,
+    startDelay: 0,
     cursor: {},
     onTypingDone: () => {},
   }
@@ -27,16 +29,20 @@ export default class Typist extends Component {
     this.state = {
       text: [],
     };
+
+    if (this.props.startDelay > 0) {
+      this.typeAll = setTimeout.bind(window, this.typeAll.bind(this), this.props.startDelay);
+    }
   }
 
   componentDidMount() {
     if (this.props.children) {
-      this.typeEach(this.toType);
+      this.typeAll();
     }
   }
 
-  typeEach(toType) {
-    utils.asyncEach(toType, (line, adv, idx)=> {
+  typeAll(strs = this.toType) {
+    utils.asyncEach(strs, (line, adv, idx)=> {
       this.setState({text: this.state.text.concat([''])}, ()=> {
         this.typeStr(line, idx, adv);
       });
