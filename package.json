@@ -31,7 +31,7 @@
   ],
   "author": "Juan Tejada",
   "license": "MIT",
-  "dependencies": {
+  "peerDependencies": {
     "react": "^0.13.3"
   },
   "devDependencies": {
