@@ -79,6 +79,7 @@ Refer to [`examples/`](/examples) for more examples.
 * [`startDelay`](#startDelay)
 * [`cursor`](#cursor)
 * [`onTypingDone`](#onTypingDone)
+* [`delayGenerator`](#delayGenerator)
 
 <a name="className"></a>
 #### className
@@ -131,6 +132,22 @@ include the [css](#cssBlink)
 #### onTypingDone
 Function to be called when typing animation is complete.
 
+<a name="delayGenerator"></a>
+#### delayGenerator
+*Default*: [`gaussianDistribution`](normal-dist)
+
+Function to be called to generate the typing delay (in ms) for every keystroke
+of the animation. Every time this function is called it should return a value
+in milliseconds.
+
+```js
+function(mean) {
+  ...
+}
+```
+
+* `mean`: Average typing delay. Will be the value of [`props.avgTypingDelay`](#avgTypingDelay)
+
 
 ## Development
 
@@ -165,3 +182,5 @@ npm test
 ## License
 
 [MIT](http://mit-license.org)
+
+[normal-dist]: https://en.wikipedia.org/wiki/Normal_distribution

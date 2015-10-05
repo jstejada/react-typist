@@ -1,7 +1,7 @@
 import React from 'react';
 const Console = console;
 
-export function gaussianRnd({tms = 12, mean = 70, std = 25} = {}) {
+export function gaussianRnd(mean = 70, {tms = 12, std = 25} = {}) {
   let sum = 0;
   for (let idx = 0; idx < tms; idx++) {
     sum += Math.random();

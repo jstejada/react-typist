@@ -12,6 +12,7 @@ export default class Typist extends Component {
     startDelay: PropTypes.number,
     cursor: PropTypes.object,
     onTypingDone: PropTypes.func,
+    delayGenerator: PropTypes.func,
   }
 
   static defaultProps = {
@@ -20,6 +21,7 @@ export default class Typist extends Component {
     startDelay: 0,
     cursor: {},
     onTypingDone: () => {},
+    delayGenerator: utils.gaussianRnd,
   }
 
   constructor(props) {
@@ -58,7 +60,7 @@ export default class Typist extends Component {
         this.setState({text}, adv);
       },
       onDone,
-      utils.gaussianRnd.bind(null, {mean: this.props.avgTypingDelay})
+      this.props.delayGenerator.bind(null, this.props.avgTypingDelay)
     );
   }
 
