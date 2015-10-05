@@ -26,20 +26,25 @@ export default class Typist extends Component {
 
   constructor(props) {
     super(props);
-    this.toType = utils.extractText(this.props.children);
-    this.elFactories = utils.extractElementFactories(this.props.children);
-    this.state = {
-      text: [],
-    };
+    if (this.props.children) {
+      this.toType = utils.extractText(this.props.children);
+      this.elFactories = utils.extractElementFactories(this.props.children);
 
-    if (this.props.startDelay > 0) {
-      this.typeAll = setTimeout.bind(window, this.typeAll.bind(this), this.props.startDelay);
+      if (this.props.startDelay > 0) {
+        this.typeAll = setTimeout.bind(window, this.typeAll.bind(this), this.props.startDelay);
+      }
     }
+  }
+
+  state = {
+    text: [],
   }
 
   componentDidMount() {
     if (this.props.children) {
       this.typeAll();
+    } else {
+      this.props.onTypingDone();
     }
   }
 
