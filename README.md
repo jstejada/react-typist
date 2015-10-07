@@ -134,7 +134,7 @@ Function to be called when typing animation is complete.
 
 <a name="delayGenerator"></a>
 #### delayGenerator
-*Default*: [`gaussianDistribution`](normal-dist)
+*Default*: [`gaussianDistribution`][normal-dist]
 
 Function to be called to generate the typing delay (in ms) for every keystroke
 of the animation. Every time this function is called it should return a value
@@ -166,7 +166,6 @@ npm run examples
 
 #### To do
 
-* [ ] Tests
 * [ ] Support delays in typing animation
 * [ ] Support arbitrary element trees
 * [ ] Support backspace animation
