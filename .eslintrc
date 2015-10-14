@@ -9,6 +9,7 @@
     "jasmine": true
   },
   "rules": {
-    "react/prop-types": [2, {ignore: ["children"]}]
+    "react/prop-types": [2, {ignore: ["children"]}],
+    "eqeqeq": [2, "smart"]
   }
 }
