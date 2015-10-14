@@ -72,7 +72,8 @@ export default class Typist extends Component {
   render() {
     const className = this.props.className;
     const els = this.state.text.map((line, idx)=>{
-      return this.elFactories[idx](line);
+      const fact = this.elFactories[idx];
+      return line.length > 0 ? fact(line) : fact();
     });
 
     return (
