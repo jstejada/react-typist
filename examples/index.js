@@ -1,5 +1,6 @@
 
 import React from 'react';
+import ReactDOM from 'react-dom';
 import Typist from 'Typist';
 import './main.scss';
 
@@ -46,4 +47,4 @@ class TypistExample extends React.Component {
 
 }
 
-React.render(<TypistExample />, document.getElementById('content'));
+ReactDOM.render(<TypistExample />, document.getElementById('content'));

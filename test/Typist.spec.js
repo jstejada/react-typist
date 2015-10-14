@@ -1,6 +1,7 @@
-import React from 'react/addons';
+import React from 'react';
+import TestUtils from 'react-addons-test-utils';
+import {findDOMNode} from 'react-dom';
 import Typist from 'Typist';
-const {findDOMNode, addons: {TestUtils}} = React;
 
 
 describe('Typist', ()=> {

@@ -32,7 +32,8 @@
   "author": "Juan Tejada",
   "license": "MIT",
   "peerDependencies": {
-    "react": "^0.13.3"
+    "react": "^0.14",
+    "react-dom": "^0.14"
   },
   "devDependencies": {
     "autoprefixer-loader": "^3.1.0",
@@ -53,6 +54,9 @@
     "karma-sourcemap-loader": "^0.3.5",
     "karma-webpack": "^1.7.0",
     "node-sass": "^3.3.3",
+    "react": "^0.14.0",
+    "react-addons-test-utils": "^0.14.0",
+    "react-dom": "^0.14.0",
     "sass-loader": "^2.0.1",
     "style-loader": "^0.12.4",
     "webpack": "^1.12.2",
