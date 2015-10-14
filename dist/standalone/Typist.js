@@ -171,7 +171,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      var className = this.props.className;
 	      var els = this.state.text.map(function (line, idx) {
-	        return _this3.elFactories[idx](line);
+	        var fact = _this3.elFactories[idx];
+	        return line.length > 0 ? fact(line) : fact();
 	      });
 
 	      return _react2['default'].createElement(
