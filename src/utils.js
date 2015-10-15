@@ -11,7 +11,7 @@ export function gaussianRnd(mean, std) {
   return Math.round((sum) * std) + mean;
 }
 
-export function asyncEach(arr, iterator, onDone = ()=> {}) {
+export function asyncEach(arr, callback, onDone = ()=> {}) {
   let count = 0;
   const adv = ()=> {
     if (count === arr.length) {
@@ -19,7 +19,7 @@ export function asyncEach(arr, iterator, onDone = ()=> {}) {
     }
     const idx = count;
     count++;
-    iterator(arr[idx], adv, idx);
+    callback(arr[idx], adv, idx);
   };
   adv();
 }
