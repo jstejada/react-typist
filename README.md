@@ -133,13 +133,13 @@ Milliseconds before typing animation begins.
 
 Object containing options for cursor:
 
-* show (bool): wether to display cursor at the end of text.
-* blink (bool): wether to add blinking animation to cursor. You must also
+* `show (bool)`: wether to display cursor at the end of text.
+* `blink (bool)`: wether to add blinking animation to cursor. You must also
 include the [css](#cssBlink)
-* element (string): character to use for the cursor
-* hideWhenDone (bool): wether the cursor should be hidden after tyiping
+* `element (string)`: character to use for the cursor
+* `hideWhenDone (bool)`: wether the cursor should be hidden after tyiping
 animation is complete.
-* hideWhenDoneDelay (int): delay to be applied before hiding cursor when typing
+* `hideWhenDoneDelay (int)`: delay to be applied before hiding cursor when typing
 animation is complete.
 
 <a name="onTypingDone"></a>
@@ -161,14 +161,14 @@ function(mean, std, current = {line, lineIdx, character, charIdx, defDelayGenera
 }
 ```
 
-* `mean`: Average typing delay. Will be the value of [`props.avgTypingDelay`](#avgTypingDelay)
-* `std`: Standard deviation of typing delay. Will be the value of [`props.stdTypingDelay`](#stdTypingDelay)
-* `current.line`: Value of line of text (Typist child) currently being animated.
-* `current.lineIdx`: Index of line of text (Typist child) currently being animated.
-* `current.character`: Value of character that was just rendered.
-* `current.charIdx`: Index of character that was just rendered.
-* `current.defaultDelayGenerator`: Reference to default delay generator function
-  to be able to fall back to.
+* `mean (number)`: Average typing delay. Will be the value of [`props.avgTypingDelay`](#avgTypingDelay)
+* `std (number)`: Standard deviation of typing delay. Will be the value of [`props.stdTypingDelay`](#stdTypingDelay)
+* `current.line (string)`: Value of line of text (Typist child) currently being animated.
+* `current.lineIdx (int)`: Index of line of text (Typist child) currently being animated.
+* `current.character (string)`: Value of character that was just rendered.
+* `current.charIdx (int)`: Index of character that was just rendered.
+* `current.defaultDelayGenerator (function)`: Reference to default delay
+generator function to be able to fall back to.
 
 
 This function can also be used to introduce delays in the typing animation.
