@@ -9,15 +9,10 @@ class TypistExample extends React.Component {
 
   state = {
     renderMsg: false,
-    msgCursor: true,
   }
 
   onHeaderTyped = ()=> {
     this.setState({renderMsg: true});
-  }
-
-  onMsgTyped = ()=> {
-    setTimeout(this.setState.bind(this, {msgCursor: false}), 2000);
   }
 
   render() {
@@ -30,8 +25,7 @@ class TypistExample extends React.Component {
         </Typist>
         <div className="TypistExample-content">
           {this.state.renderMsg ? (
-            <Typist className="TypistExample-message" onTypingDone={this.onMsgTyped}
-              cursor={{show: this.state.msgCursor}}>
+            <Typist className="TypistExample-message" cursor={{hideWhenDone: true}}>
               * Easy to style
               <br />
               * Easy to customize
