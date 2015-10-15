@@ -1,12 +1,13 @@
 import React from 'react';
 const Console = console;
 
-export function gaussianRnd(mean = 70, {tms = 12, std = 25} = {}) {
+export function gaussianRnd(mean, std) {
+  const times = 12;
   let sum = 0;
-  for (let idx = 0; idx < tms; idx++) {
+  for (let idx = 0; idx < times; idx++) {
     sum += Math.random();
   }
-  sum -= (tms / 2);
+  sum -= (times / 2);
   return Math.round((sum) * std) + mean;
 }
 
@@ -23,11 +24,11 @@ export function asyncEach(arr, iterator, onDone = ()=> {}) {
   adv();
 }
 
-export function eachRndTimeout(arr, iterator, onDone, rndFn = gaussianRnd) {
-  asyncEach(arr, (el, adv)=> {
-    setTimeout(()=>{
-      iterator(el, adv);
-    }, rndFn());
+export function eachRndTimeout(arr, callback, onDone, rndFn) {
+  asyncEach(arr, (el, adv, idx)=> {
+    callback(el, ()=> {
+      setTimeout(adv, rndFn(el, idx));
+    });
   }, onDone);
 }
 
