@@ -60,6 +60,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  value: true
 	});
 
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 	var _get = function get(_x3, _x4, _x5) { var _again = true; _function: while (_again) { var object = _x3, property = _x4, receiver = _x5; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x3 = parent; _x4 = property; _x5 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
@@ -113,12 +115,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }]);
 
 	  function Typist(props) {
+	    var _this = this;
+
 	    _classCallCheck(this, Typist);
 
 	    _get(Object.getPrototypeOf(Typist.prototype), 'constructor', this).call(this, props);
 	    this.state = {
-	      text: []
+	      text: [],
+	      isDone: false
 	    };
+
+	    this.onTypingDone = function () {
+	      _this.setState({ isDone: true });
+	      _this.props.onTypingDone();
+	    };
+
 	    if (this.props.children) {
 	      this.toType = utils.extractText(this.props.children);
 	      this.elFactories = utils.extractElementFactories(this.props.children);
@@ -135,43 +146,43 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (this.props.children) {
 	        this.typeAll();
 	      } else {
-	        this.props.onTypingDone();
+	        this.onTypingDone();
 	      }
 	    }
 	  }, {
 	    key: 'typeAll',
 	    value: function typeAll() {
-	      var _this = this;
+	      var _this2 = this;
 
 	      var strs = arguments.length <= 0 || arguments[0] === undefined ? this.toType : arguments[0];
 
 	      utils.asyncEach(strs, function (line, adv, idx) {
-	        _this.setState({ text: _this.state.text.concat(['']) }, function () {
-	          _this.typeStr(line, idx, adv);
+	        _this2.setState({ text: _this2.state.text.concat(['']) }, function () {
+	          _this2.typeStr(line, idx, adv);
 	        });
-	      }, this.props.onTypingDone);
+	      }, this.onTypingDone);
 	    }
 	  }, {
 	    key: 'typeStr',
 	    value: function typeStr(line, idx) {
-	      var _this2 = this;
+	      var _this3 = this;
 
 	      var onDone = arguments.length <= 2 || arguments[2] === undefined ? function () {} : arguments[2];
 
 	      utils.eachRndTimeout(line, function (ch, adv) {
-	        var text = _this2.state.text.slice();
+	        var text = _this3.state.text.slice();
 	        text[idx] += ch;
-	        _this2.setState({ text: text }, adv);
+	        _this3.setState({ text: text }, adv);
 	      }, onDone, this.props.delayGenerator.bind(null, this.props.avgTypingDelay));
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _this3 = this;
+	      var _this4 = this;
 
 	      var className = this.props.className;
 	      var els = this.state.text.map(function (line, idx) {
-	        var fact = _this3.elFactories[idx];
+	        var fact = _this4.elFactories[idx];
 	        return line.length > 0 ? fact(line) : fact();
 	      });
 
@@ -179,7 +190,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        'div',
 	        { className: 'Typist ' + className },
 	        els,
-	        _react2['default'].createElement(_Cursor2['default'], this.props.cursor)
+	        _react2['default'].createElement(_Cursor2['default'], _extends({ isDone: this.state.isDone }, this.props.cursor))
 	      );
 	    }
 	  }]);
@@ -230,7 +241,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: {
 	      blink: _react.PropTypes.bool,
 	      show: _react.PropTypes.bool,
-	      element: _react.PropTypes.node
+	      element: _react.PropTypes.node,
+	      hideWhenDone: _react.PropTypes.bool,
+	      hideWhenDoneDelay: _react.PropTypes.number,
+	      isDone: _react.PropTypes.bool
 	    },
 	    enumerable: true
 	  }, {
@@ -238,7 +252,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: {
 	      blink: true,
 	      show: true,
-	      element: '|'
+	      element: '|',
+	      hideWhenDone: false,
+	      hideWhenDoneDelay: 1000,
+	      isDone: false
 	    },
 	    enumerable: true
 	  }]);
@@ -247,21 +264,35 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _classCallCheck(this, Cursor);
 
 	    _get(Object.getPrototypeOf(Cursor.prototype), 'constructor', this).call(this, props);
+	    this.state = {
+	      shouldRender: this.props.show
+	    };
 	  }
 
 	  _createClass(Cursor, [{
+	    key: 'componentWillReceiveProps',
+	    value: function componentWillReceiveProps(nextProps) {
+	      var _this = this;
+
+	      var shouldHide = !this.props.isDone && nextProps.isDone && this.props.hideWhenDone;
+	      if (shouldHide) {
+	        setTimeout(function () {
+	          return _this.setState({ shouldRender: false });
+	        }, this.props.hideWhenDoneDelay);
+	      }
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var el = null;
-	      if (this.props.show) {
-	        var blink = this.props.blink ? '--blinking' : '';
-	        el = _react2['default'].createElement(
+	      if (this.state.shouldRender) {
+	        var className = this.props.blink ? ' Cursor--blinking' : '';
+	        return _react2['default'].createElement(
 	          'span',
-	          { className: 'Cursor' + blink },
+	          { className: 'Cursor' + className },
 	          this.props.element
 	        );
 	      }
-	      return el;
+	      return null;
 	    }
 	  }]);
 
