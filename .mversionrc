@@ -1,0 +1,7 @@
+{
+  "scripts": {
+    "precommit": "npm run dist && npm run standalone && git add dist",
+    "postcommit": "git push origin master --tags && npm publish",
+    "postupdate": "echo 'Updated to version %s in manifest files'"
+  }
+}
