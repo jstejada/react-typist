@@ -64,7 +64,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	var _get = function get(_x3, _x4, _x5) { var _again = true; _function: while (_again) { var object = _x3, property = _x4, receiver = _x5; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x3 = parent; _x4 = property; _x5 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+	var _get = function get(_x5, _x6, _x7) { var _again = true; _function: while (_again) { var object = _x5, property = _x6, receiver = _x7; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x5 = parent; _x6 = property; _x7 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
@@ -95,6 +95,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      children: _react.PropTypes.node,
 	      className: _react.PropTypes.string,
 	      avgTypingDelay: _react.PropTypes.number,
+	      stdTypingDelay: _react.PropTypes.number,
 	      startDelay: _react.PropTypes.number,
 	      cursor: _react.PropTypes.object,
 	      onTypingDone: _react.PropTypes.func,
@@ -106,6 +107,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: {
 	      className: '',
 	      avgTypingDelay: 70,
+	      stdTypingDelay: 25,
 	      startDelay: 0,
 	      cursor: {},
 	      onTypingDone: function onTypingDone() {},
@@ -128,6 +130,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.onTypingDone = function () {
 	      _this.setState({ isDone: true });
 	      _this.props.onTypingDone();
+	    };
+
+	    this.delayGenerator = function (line, lineIdx, character, charIdx) {
+	      var mean = _this.props.avgTypingDelay;
+	      var std = _this.props.stdTypingDelay;
+	      return _this.props.delayGenerator(mean, std, {
+	        line: line,
+	        lineIdx: lineIdx,
+	        character: character,
+	        charIdx: charIdx,
+	        defDelayGenerator: function defDelayGenerator() {
+	          var mn = arguments.length <= 0 || arguments[0] === undefined ? mean : arguments[0];
+	          var st = arguments.length <= 1 || arguments[1] === undefined ? std : arguments[1];
+	          return utils.gaussianRnd(mn, st);
+	        }
+	      });
 	    };
 
 	    if (this.props.children) {
@@ -173,7 +191,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var text = _this3.state.text.slice();
 	        text[idx] += ch;
 	        _this3.setState({ text: text }, adv);
-	      }, onDone, this.props.delayGenerator.bind(null, this.props.avgTypingDelay));
+	      }, onDone, this.delayGenerator.bind(this, line, idx));
 	    }
 	  }, {
 	    key: 'render',
@@ -333,25 +351,17 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var Console = console;
 
-	function gaussianRnd() {
-	  var mean = arguments.length <= 0 || arguments[0] === undefined ? 70 : arguments[0];
-
-	  var _ref = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-
-	  var _ref$tms = _ref.tms;
-	  var tms = _ref$tms === undefined ? 12 : _ref$tms;
-	  var _ref$std = _ref.std;
-	  var std = _ref$std === undefined ? 25 : _ref$std;
-
+	function gaussianRnd(mean, std) {
+	  var times = 12;
 	  var sum = 0;
-	  for (var idx = 0; idx < tms; idx++) {
+	  for (var idx = 0; idx < times; idx++) {
 	    sum += Math.random();
 	  }
-	  sum -= tms / 2;
+	  sum -= times / 2;
 	  return Math.round(sum * std) + mean;
 	}
 
-	function asyncEach(arr, iterator) {
+	function asyncEach(arr, callback) {
 	  var onDone = arguments.length <= 2 || arguments[2] === undefined ? function () {} : arguments[2];
 
 	  var count = 0;
@@ -361,18 +371,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	    var idx = count;
 	    count++;
-	    iterator(arr[idx], adv, idx);
+	    callback(arr[idx], adv, idx);
 	  };
 	  adv();
 	}
 
-	function eachRndTimeout(arr, iterator, onDone) {
-	  var rndFn = arguments.length <= 3 || arguments[3] === undefined ? gaussianRnd : arguments[3];
-
-	  asyncEach(arr, function (el, adv) {
-	    setTimeout(function () {
-	      iterator(el, adv);
-	    }, rndFn());
+	function eachRndTimeout(arr, callback, onDone, rndFn) {
+	  asyncEach(arr, function (el, adv, idx) {
+	    callback(el, function () {
+	      setTimeout(adv, rndFn(el, idx));
+	    });
 	  }, onDone);
 	}
 
