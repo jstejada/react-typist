@@ -152,17 +152,36 @@ Function to be called when typing animation is complete.
 
 Function to be called to generate the typing delay (in ms) for every keystroke
 of the animation. Every time this function is called it should return a value
-in milliseconds.
+in milliseconds. This function can be used to provide your own typing delay
+distribution, e.g. uniform (always 100ms) or even deterministic.
 
 ```js
-function(mean, std) {
+function(mean, std, current = {line, lineIdx, character, charIdx, defDelayGenerator}) {
   ...
 }
 ```
 
 * `mean`: Average typing delay. Will be the value of [`props.avgTypingDelay`](#avgTypingDelay)
 * `std`: Standard deviation of typing delay. Will be the value of [`props.stdTypingDelay`](#stdTypingDelay)
+* `current.line`: Value of line of text (Typist child) currently being animated.
+* `current.lineIdx`: Index of line of text (Typist child) currently being animated.
+* `current.character`: Value of character that was just rendered.
+* `current.charIdx`: Index of character that was just rendered.
+* `current.defaultDelayGenerator`: Reference to default delay generator function
+  to be able to fall back to.
 
+
+This function can also be used to introduce delays in the typing animation.
+e.g.:
+```js
+function(mean, std, {line, lineIdx, charIdx, defDelayGenerator}) {
+  // Delay the animation for 2 seconds at the last character of the first line
+  if (lineIdx === 0 && charIdx === line.length - 1) {
+    return 2000;
+  }
+  return defDelayGenerator();
+}
+```
 
 ## Development
 
@@ -181,7 +200,7 @@ npm run examples
 
 #### To do
 
-* [ ] Support delays in typing animation
+* [x] Support delays in typing animation
 * [ ] Support arbitrary element trees
 * [ ] Support backspace animation
 
