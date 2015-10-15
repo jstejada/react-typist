@@ -140,6 +140,17 @@ describe('Typist', ()=> {
       jasmine.clock().tick(500);
       expect(findDOMNode(inst).textContent).toEqual('Test▍');
     });
+
+    it('hides cursor and end of animation when specified', ()=> {
+      props.cursor = {hideWhenDone: true, hideWhenDoneDelay: 100};
+      const inst = TestUtils.renderIntoDocument(<Typist {...props}>Test</Typist>);
+      jasmine.clock().tick(400);
+      let res = TestUtils.scryRenderedDOMComponentsWithClass(inst, 'Cursor');
+      expect(res.length).toEqual(1);
+      jasmine.clock().tick(100);
+      res = TestUtils.scryRenderedDOMComponentsWithClass(inst, 'Cursor');
+      expect(res.length).toEqual(0);
+    });
   });
 
   describe('startDelay', ()=> {
