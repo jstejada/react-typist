@@ -117,7 +117,9 @@ Milliseconds before typing animation begins.
 {
   show: true,
   blink: true,
-  element: '|'
+  element: '|',
+  hideWhenDone: false,
+  hideWhenDoneDelay: 1000,
 }
 ```
 
@@ -127,6 +129,10 @@ Object containing options for cursor:
 * blink (bool): wether to add blinking animation to cursor. You must also
 include the [css](#cssBlink)
 * element (string): character to use for the cursor
+* hideWhenDone (bool): wether the cursor should be hidden after tyiping
+animation is complete.
+* hideWhenDoneDelay (int): delay to be applied before hiding cursor when typing
+animation is complete.
 
 <a name="onTypingDone"></a>
 #### onTypingDone
