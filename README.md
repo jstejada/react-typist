@@ -76,6 +76,7 @@ Refer to [`examples/`](/examples) for more examples.
 ## Options
 * [`className`](#className)
 * [`avgTypingDelay`](#avgTypingDelay)
+* [`stdTypingDelay`](#stdTypingDelay)
 * [`startDelay`](#startDelay)
 * [`cursor`](#cursor)
 * [`onTypingDone`](#onTypingDone)
@@ -103,6 +104,13 @@ have the CSS class `Typist` applied to it.
 Average typing delay in milliseconds between every keystroke of the typing
 animation **(Less is faster)**. The distribution of the typing delays between
 strokes is not uniform, so as to make the animation more human like.
+
+<a name="stdTypingDelay"></a>
+#### stdTypingDelay
+*Default*: `25`
+
+Standard deviation of typing delay between keystrokes of the typing animation.
+**(Less means more uniform, less variance between values)**.
 
 <a name="startDelay"></a>
 #### startDelay
@@ -147,12 +155,13 @@ of the animation. Every time this function is called it should return a value
 in milliseconds.
 
 ```js
-function(mean) {
+function(mean, std) {
   ...
 }
 ```
 
 * `mean`: Average typing delay. Will be the value of [`props.avgTypingDelay`](#avgTypingDelay)
+* `std`: Standard deviation of typing delay. Will be the value of [`props.stdTypingDelay`](#stdTypingDelay)
 
 
 ## Development

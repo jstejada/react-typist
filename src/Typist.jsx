@@ -9,6 +9,7 @@ export default class Typist extends Component {
     children: PropTypes.node,
     className: PropTypes.string,
     avgTypingDelay: PropTypes.number,
+    stdTypingDelay: PropTypes.number,
     startDelay: PropTypes.number,
     cursor: PropTypes.object,
     onTypingDone: PropTypes.func,
@@ -18,6 +19,7 @@ export default class Typist extends Component {
   static defaultProps = {
     className: '',
     avgTypingDelay: 70,
+    stdTypingDelay: 25,
     startDelay: 0,
     cursor: {},
     onTypingDone: () => {},
