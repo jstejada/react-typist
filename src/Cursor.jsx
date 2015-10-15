@@ -8,29 +8,45 @@ export default class Cursor extends Component {
     blink: PropTypes.bool,
     show: PropTypes.bool,
     element: PropTypes.node,
+    hideWhenDone: PropTypes.bool,
+    hideWhenDoneDelay: PropTypes.number,
+    isDone: PropTypes.bool,
   }
 
   static defaultProps = {
     blink: true,
     show: true,
     element: '|',
+    hideWhenDone: false,
+    hideWhenDoneDelay: 1000,
+    isDone: false,
   }
 
   constructor(props) {
     super(props);
   }
 
+  state = {
+    shouldRender: this.props.show,
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const shouldHide = !this.props.isDone && nextProps.isDone && this.props.hideWhenDone;
+    if (shouldHide) {
+      setTimeout(()=> this.setState({shouldRender: false}), this.props.hideWhenDoneDelay);
+    }
+  }
+
   render() {
-    let el = null;
-    if (this.props.show) {
-      const blink = this.props.blink ? '--blinking' : '';
-      el = (
-        <span className={`Cursor${blink}`}>
+    if (this.state.shouldRender) {
+      const className = this.props.blink ? ' Cursor--blinking' : '';
+      return (
+        <span className={`Cursor${className}`}>
           {this.props.element}
         </span>
       );
     }
-    return el;
+    return null;
   }
 
 }

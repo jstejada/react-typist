@@ -38,14 +38,20 @@ export default class Typist extends Component {
 
   state = {
     text: [],
+    isDone: false,
   }
 
   componentDidMount() {
     if (this.props.children) {
       this.typeAll();
     } else {
-      this.props.onTypingDone();
+      this.onTypingDone();
     }
+  }
+
+  onTypingDone = ()=> {
+    this.setState({isDone: true});
+    this.props.onTypingDone();
   }
 
   typeAll(strs = this.toType) {
@@ -53,7 +59,7 @@ export default class Typist extends Component {
       this.setState({text: this.state.text.concat([''])}, ()=> {
         this.typeStr(line, idx, adv);
       });
-    }, this.props.onTypingDone);
+    }, this.onTypingDone);
   }
 
   typeStr(line, idx, onDone = ()=>{}) {
@@ -79,7 +85,7 @@ export default class Typist extends Component {
     return (
       <div className={`Typist ${className}`}>
         {els}
-        <Cursor {...this.props.cursor} />
+        <Cursor isDone={this.state.isDone} {...this.props.cursor} />
       </div>
     );
   }
