@@ -9,6 +9,7 @@ export default class Typist extends Component {
     children: PropTypes.node,
     className: PropTypes.string,
     avgTypingDelay: PropTypes.number,
+    stdTypingDelay: PropTypes.number,
     startDelay: PropTypes.number,
     cursor: PropTypes.object,
     onTypingDone: PropTypes.func,
@@ -18,6 +19,7 @@ export default class Typist extends Component {
   static defaultProps = {
     className: '',
     avgTypingDelay: 70,
+    stdTypingDelay: 25,
     startDelay: 0,
     cursor: {},
     onTypingDone: () => {},
@@ -54,6 +56,22 @@ export default class Typist extends Component {
     this.props.onTypingDone();
   }
 
+  delayGenerator = (line, lineIdx, character, charIdx)=> {
+    const mean = this.props.avgTypingDelay;
+    const std = this.props.stdTypingDelay;
+    return this.props.delayGenerator(
+      mean,
+      std,
+      {
+        line,
+        lineIdx,
+        character,
+        charIdx,
+        defDelayGenerator: (mn = mean, st = std)=> utils.gaussianRnd(mn, st),
+      }
+    );
+  }
+
   typeAll(strs = this.toType) {
     utils.asyncEach(strs, (line, adv, idx)=> {
       this.setState({text: this.state.text.concat([''])}, ()=> {
@@ -71,7 +89,7 @@ export default class Typist extends Component {
         this.setState({text}, adv);
       },
       onDone,
-      this.props.delayGenerator.bind(null, this.props.avgTypingDelay)
+      this.delayGenerator.bind(this, line, idx)
     );
   }
 

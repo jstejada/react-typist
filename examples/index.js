@@ -15,6 +15,16 @@ class TypistExample extends React.Component {
     this.setState({renderMsg: true});
   }
 
+  delayGen(mean, std, {line, lineIdx, charIdx, defDelayGenerator}) {
+    if (lineIdx === 0 && charIdx === line.length - 1) {
+      return 1000;
+    }
+    if (lineIdx === 2 && charIdx === line.length - 1) {
+      return 1000;
+    }
+    return defDelayGenerator(mean + 25);
+  }
+
   render() {
     const docs = '//github.com/jstejada/react-typist';
     return (
@@ -25,7 +35,8 @@ class TypistExample extends React.Component {
         </Typist>
         <div className="TypistExample-content">
           {this.state.renderMsg ? (
-            <Typist className="TypistExample-message" cursor={{hideWhenDone: true}}>
+            <Typist className="TypistExample-message" delayGenerator={this.delayGen}
+              cursor={{hideWhenDone: true}}>
               * Easy to style
               <br />
               * Easy to customize
