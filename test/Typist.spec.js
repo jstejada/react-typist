@@ -34,8 +34,8 @@ describe('Typist', ()=> {
         let acum = '';
         for (const str of strs) {
           for (let idx = 1; idx <= str.length; idx++) {
-            jasmine.clock().tick(100);
             expect(findDOMNode(inst).textContent).toEqual(`${acum}${str.slice(0, idx)}|`);
+            jasmine.clock().tick(100);
           }
           acum += str;
         }
@@ -46,8 +46,8 @@ describe('Typist', ()=> {
         const inst = TestUtils.renderIntoDocument(<Typist {...props}>{str}</Typist>);
 
         for (let idx = 1; idx <= str.length; idx++) {
-          jasmine.clock().tick(100);
           expect(findDOMNode(inst).textContent).toEqual(`${str.slice(0, idx)}|`);
+          jasmine.clock().tick(100);
         }
       });
 
@@ -157,20 +157,43 @@ describe('Typist', ()=> {
     it('starts animation after specified delay', ()=> {
       props.startDelay = 500;
       const inst = TestUtils.renderIntoDocument(<Typist {...props}>Test</Typist>);
-      jasmine.clock().tick(500);
       expect(findDOMNode(inst).textContent).toEqual('|');
       jasmine.clock().tick(500);
+      expect(findDOMNode(inst).textContent).toEqual('T|');
+      jasmine.clock().tick(400);
       expect(findDOMNode(inst).textContent).toEqual('Test|');
     });
   });
 
-  describe('avgTypingDelay', ()=> {
-    it('uses specified avg typing delay', ()=> {
+  describe('delayGenerator', ()=> {
+    it('uses specified props for delay', ()=> {
       const spy = jasmine.createSpy('delayGenerator').and.returnValue(100);
-      props = {avgTypingDelay: 500, delayGenerator: spy};
+      props = {avgTypingDelay: 500, stdTypingDelay: 100, delayGenerator: spy};
       TestUtils.renderIntoDocument(<Typist {...props}>Te</Typist>);
-      jasmine.clock().tick(200);
-      expect(spy.calls.allArgs()).toEqual([[500], [500]]);
+      jasmine.clock().tick(100);
+      expect(spy.calls.argsFor(0).slice(0, 2)).toEqual([500, 100]);
+      expect(spy.calls.argsFor(1).slice(0, 2)).toEqual([500, 100]);
+    });
+
+    it('passes obj with info for current line and char to delaygGenerator', ()=> {
+      const spy = jasmine.createSpy('delayGenerator').and.returnValue(100);
+      props = {delayGenerator: spy};
+      TestUtils.renderIntoDocument(<Typist {...props}>{['Te', 'st']}</Typist>);
+      jasmine.clock().tick(300);
+      for (const idx of [0, 1]) {
+        const obj = spy.calls.argsFor(idx).slice(2)[0];
+        expect(obj.line).toEqual('Te');
+        expect(obj.lineIdx).toEqual(0);
+        expect(obj.character).toEqual('Te'[idx]);
+        expect(obj.charIdx).toEqual(idx);
+      }
+      for (const idx of [2, 3]) {
+        const obj = spy.calls.argsFor(idx).slice(2)[0];
+        expect(obj.line).toEqual('st');
+        expect(obj.lineIdx).toEqual(1);
+        expect(obj.character).toEqual('st'[idx - 2]);
+        expect(obj.charIdx).toEqual(idx - 2);
+      }
     });
   });
 });
