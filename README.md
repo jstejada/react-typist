@@ -25,7 +25,7 @@ bower install react-typist --save
 import React, {Component} from 'react';
 import Typist from 'react-typist';
 
-export defaults MyComponent extends Component {
+export default class MyComponent extends Component {
 
   render() {
     return (
