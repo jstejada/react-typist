@@ -41,7 +41,7 @@ class TypistExample extends React.Component {
               <br />
               * Easy to customize
               <br />
-              <span>* </span><a href={docs} className="flash">docs</a>
+              <span>* <a href={docs} className="flash">docs</a></span>
               <br />
             </Typist>
           ) : null }
