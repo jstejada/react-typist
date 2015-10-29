@@ -103,7 +103,7 @@ export default class Typist extends Component {
 
   render() {
     const className = this.props.className;
-    const innerTree = utils.renderTree(this.props.children, this.state.text);
+    const innerTree = utils.extractTreeWithText(this.props.children, this.state.text);
 
     return (
       <div className={`Typist ${className}`}>

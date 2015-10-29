@@ -75,11 +75,12 @@ export function elementFactoryMaker() {
   };
 }
 
-export function renderTree(...args) {
+export function extractTreeWithText(...args) {
   if (!args[0]) return void(0);
   const factMaker = elementFactoryMaker();
 
   const inner = (tree, text, textIdx)=> {
+    if (textIdx >= text.length) return [null, textIdx];
     let idx = textIdx;
     const recurse = (ch)=> {
       const [child, advIdx] = inner(ch, text, idx);
@@ -101,7 +102,7 @@ export function renderTree(...args) {
     }
 
     // Return text
-    return [text[idx] || null, idx + 1];
+    return [text[idx], idx + 1];
   };
   return inner(...args, 0)[0];
 }

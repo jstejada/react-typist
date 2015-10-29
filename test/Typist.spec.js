@@ -95,6 +95,7 @@ describe('Typist', ()=> {
             Test1
             <span>Test2</span>
             <br />
+            {''}
           </Typist>
         );
 

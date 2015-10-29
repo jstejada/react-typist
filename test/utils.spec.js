@@ -43,55 +43,121 @@ describe('utils', ()=> {
     });
   });
 
-  describe('.renderTree', ()=> {
+  describe('.extractTreeWithText', ()=> {
     beforeEach(()=> jasmine.addMatchers(ReactMatchers));
 
-    it('renders text correctly when simple tree', ()=> {
-      const res = utils.renderTree(<div className="c">Text</div>, ['Expected']);
-      expect(res.props.className).toEqual('c');
-      expect(res.props.children).toEqual('Expected');
+    describe('when all text passed', ()=> {
+      it('returns tree correctly when string or number passed', ()=> {
+        const res = utils.extractTreeWithText('Text', ['Expected']);
+        expect(res).toEqual('Expected');
+      });
+
+      it('returns tree correctly when array of strings or numbers passed', ()=> {
+        const res = utils.extractTreeWithText(['T1', 2], ['E1', 'E2']);
+        expect(res).toEqual(['E1', 'E2']);
+      });
+
+      it('returns tree correctly when array of trees passed', ()=> {
+        const actual = utils.extractTreeWithText(
+          [<div className="c">T1</div>, <div>T2<span>T3</span></div>],
+          ['E1', 'E2', 'E3']
+        );
+        const expected = [
+          <div className="c">E1</div>,
+          <div>E2<span>E3</span></div>,
+        ];
+        expect(actual[0]).toEqualElement(expected[0]);
+        expect(actual[1]).toEqualElement(expected[1]);
+      });
+
+      it('returns tree correctly when simple tree passed', ()=> {
+        const res = utils.extractTreeWithText(
+          <div className="c">Text</div>, ['Expected']
+        );
+        expect(res.props.className).toEqual('c');
+        expect(res.props.children).toEqual('Expected');
+      });
+
+      it('returns tree correctly when complex tree passed', ()=> {
+        const tree = (
+          <div className="c">
+            T1
+            <div><span className="s">T2</span>T3</div>
+            <p>
+              <span>T4</span>
+              <br />
+            </p>
+            <div>T5</div>
+          </div>
+        );
+        const expected = (
+          <div className="c">
+            E1
+            <div><span className="s">E2</span>E3</div>
+            <p>
+              <span>E4</span>
+              <br />
+            </p>
+            <div>E5</div>
+          </div>
+        );
+        const actual = utils.extractTreeWithText(tree, ['E1', 'E2', 'E3', 'E4', 'E5']);
+        expect(actual).toEqualElement(expected);
+      });
     });
 
-    it('renders text correctly when string or number provided', ()=> {
-      const res = utils.renderTree('Text', ['Expected']);
-      expect(res).toEqual('Expected');
+    describe('when not sufficient text passed', ()=> {
+      it('does not display nodes that have no text to render when string or number passed', ()=> {
+        const res = utils.extractTreeWithText('Text', []);
+        expect(res).toBeNull();
+      });
+
+      it('returns tree correctly when array passed', ()=> {
+        const res = utils.extractTreeWithText(['T1', 2], ['E1']);
+        expect(res).toEqual(['E1', null]);
+      });
+
+      it('returns tree correctly when array of trees passed', ()=> {
+        const actual = utils.extractTreeWithText(
+          [<div className="c">T1</div>, <div>T2<span>T3</span></div>],
+          ['E1', 'E2']
+        );
+        const expected = [<div className="c">E1</div>, <div>E2</div>];
+        expect(actual[0]).toEqualElement(expected[0]);
+        expect(actual[1]).toEqualElement(expected[1]);
+      });
+
+      it('does not display nodes that have no text to render when simple tree passed', ()=> {
+        const res = utils.extractTreeWithText(<div className="c">Text</div>, []);
+        expect(res).toBeNull();
+      });
+
+      it('does not display nodes that have no text to render when complex tree passed', ()=> {
+        const tree = (
+          <div className="c">
+            T1
+            <div><span className="s">T2</span>T3</div>
+            <p>
+              <span>T4</span>
+              <br />
+            </p>
+            <div>T5</div>
+          </div>
+        );
+        const expected = (
+          <div className="c">
+            E1
+            <div><span className="s">E2</span>E3</div>
+          </div>
+        );
+        const actual = utils.extractTreeWithText(tree, ['E1', 'E2', 'E3']);
+        expect(actual).toEqualElement(expected);
+      });
     });
 
-    it('renders text correctly when not all text provided', ()=> {
-      const res = utils.renderTree(<div className="c">Text</div>, []);
-      expect(res.props.children).toEqual('');
-    });
-
-    it('returns undefined when no tree provided', ()=> {
-      const res = utils.renderTree(undefined, []);
+    it('returns undefined when no tree passed', ()=> {
+      const res = utils.extractTreeWithText(undefined, []);
       expect(res).toBeUndefined();
-    });
-
-    it('renders text correctly when complex tree', ()=> {
-      const tree = (
-        <div className="c">
-          T1
-          <div><span className="s">T2</span>T3</div>
-          <p>
-            <span>T4</span>
-            <br />
-          </p>
-          <div>T5</div>
-        </div>
-      );
-      const expected = (
-        <div className="c">
-          E1
-          <div><span className="s">E2</span>E3</div>
-          <p>
-            <span>E4</span>
-            <br />
-          </p>
-          <div>E5</div>
-        </div>
-      );
-      const actual = utils.renderTree(tree, ['E1', 'E2', 'E3', 'E4', 'E5']);
-      expect(actual).toEqualElement(expected);
     });
   });
 });
