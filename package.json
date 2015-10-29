@@ -47,6 +47,7 @@
     "eslint-plugin-react": "^3.4.2",
     "extract-text-webpack-plugin": "^0.8.2",
     "jasmine-core": "^2.3.4",
+    "jasmine-react-matchers": "^1.0.2",
     "karma": "^0.13.10",
     "karma-chrome-launcher": "^0.2.0",
     "karma-cli": "^0.1.1",

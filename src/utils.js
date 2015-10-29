@@ -1,5 +1,4 @@
 import React from 'react';
-const Console = console;
 
 export function gaussianRnd(mean, std) {
   const times = 12;
@@ -42,35 +41,67 @@ export function exclude(obj, keys) {
   return res;
 }
 
-export function validateTypeable(obj) {
-  if (typeof obj !== 'string' && typeof obj !== 'number') {
-    Console.warn('The arguments passed as children to Typist must be ' +
-                'strings or numbers or ReactElements containing a single child of those types');
-  }
-  return obj.toString();
-}
-
 export function extractText(toType) {
-  const els = Array.isArray(toType) ? toType : [toType];
+  const st = toType ? [toType] : [];
+  const lines = [];
 
-  return els.map((el)=> {
-    let val = '';
-    if (React.isValidElement(el)) {
-      val = el.props.children ? validateTypeable(el.props.children) : '';
+  while (st.length > 0) {
+    const cur = st.pop();
+
+    if (React.isValidElement(cur)) {
+      React.Children.forEach(cur.props.children, (child)=> {
+        st.push(child);
+      });
     } else {
-      val = validateTypeable(el);
+      if (Array.isArray(cur)) {
+        for (const el of cur) {
+          st.push(el);
+        }
+      } else {
+        lines.unshift(cur);
+      }
     }
-    return val;
-  });
+  }
+  return lines;
 }
 
-export function extractElementFactories(toType) {
-  const els = Array.isArray(toType) ? toType : [toType];
-
-  return els.map((el, idx)=> {
-    const tag = React.isValidElement(el) ? el.type : 'span';
-    const props = React.isValidElement(el) ? exclude(el.props, ['children']) : {};
-    props.key = [`Typist-line-${idx}`];
+export function elementFactoryMaker() {
+  let key = 0;
+  return (el)=> {
+    const tag = el.type;
+    const props = exclude(el.props, ['children']);
+    props.key = `Typist-el-${key++}`;
     return React.createElement.bind(null, tag, props);
-  });
+  };
+}
+
+export function renderTree(...args) {
+  if (!args[0]) return void(0);
+  const factMaker = elementFactoryMaker();
+
+  const inner = (tree, text, textIdx)=> {
+    let idx = textIdx;
+    const recurse = (ch)=> {
+      const [child, advIdx] = inner(ch, text, idx);
+      idx = advIdx;
+      return child;
+    };
+
+    // Recursively call on children of React Element
+    if (React.isValidElement(tree)) {
+      const fact = factMaker(tree);
+      const children = React.Children.map(tree.props.children, recurse) || [];
+      return [fact(...children), idx];
+    }
+
+    // Recursively call on array
+    if (Array.isArray(tree)) {
+      const children = tree.map(recurse);
+      return [children, idx];
+    }
+
+    // Return text
+    return [text[idx] || null, idx + 1];
+  };
+  return inner(...args, 0)[0];
 }
