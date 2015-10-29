@@ -10,6 +10,7 @@
   },
   "rules": {
     "react/prop-types": [2, {ignore: ["children"]}],
-    "eqeqeq": [2, "smart"]
+    "eqeqeq": [2, "smart"],
+    "no-loop-func": [0]
   }
 }
