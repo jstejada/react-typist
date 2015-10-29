@@ -71,6 +71,23 @@ describe('Typist', ()=> {
         expect(findDOMNode(inst).childNodes[1].tagName).toEqual('SPAN');
       });
 
+      it('animates element trees', ()=> {
+        const strs = ['Test1', 'Test2', 'Test3'];
+        const inst = TestUtils.renderIntoDocument(
+          <Typist {...props}>
+            <span>Test1</span>
+            <div>
+              <span>Test2</span>
+              <span>Test3</span>
+            </div>
+          </Typist>
+        );
+
+        assertAnimation(inst, strs);
+        expect(findDOMNode(inst).childNodes[0].tagName).toEqual('SPAN');
+        expect(findDOMNode(inst).childNodes[1].tagName).toEqual('DIV');
+      });
+
       it('renders empty elements', ()=> {
         const strs = ['Test1', 'Test2', ''];
         const inst = TestUtils.renderIntoDocument(

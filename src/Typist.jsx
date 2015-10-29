@@ -30,7 +30,6 @@ export default class Typist extends Component {
     super(props);
     if (this.props.children) {
       this.toType = utils.extractText(this.props.children);
-      this.elFactories = utils.extractElementFactories(this.props.children);
 
       if (this.props.startDelay > 0) {
         this.typeAll = setTimeout.bind(window, this.typeAll.bind(this), this.props.startDelay);
@@ -49,6 +48,15 @@ export default class Typist extends Component {
     } else {
       this.onTypingDone();
     }
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    for (let idx = 0; idx < nextState.text.length; idx++) {
+      const txt = this.state.text[idx];
+      const ntxt = nextState.text[idx];
+      if (txt !== ntxt && ntxt.length > 0) return true;
+    }
+    return this.state.isDone !== nextState.isDone;
   }
 
   onTypingDone = ()=> {
@@ -95,14 +103,11 @@ export default class Typist extends Component {
 
   render() {
     const className = this.props.className;
-    const els = this.state.text.map((line, idx)=>{
-      const fact = this.elFactories[idx];
-      return line.length > 0 ? fact(line) : fact();
-    });
+    const innerTree = utils.renderTree(this.props.children, this.state.text);
 
     return (
       <div className={`Typist ${className}`}>
-        {els}
+        {innerTree}
         <Cursor isDone={this.state.isDone} {...this.props.cursor} />
       </div>
     );
