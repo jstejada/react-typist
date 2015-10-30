@@ -1,6 +1,7 @@
 # React Typist
-React component for typing animations. Wrap Typist around your text to create
-typing animations. Easily stylable and highly configurable.
+React Component for typing animations. Wrap Typist around your text or any
+ReactComponent tree to animate text inside the tree. Easily stylable and highly
+configurable.
 
 
 ## Install
@@ -25,7 +26,7 @@ bower install react-typist --save
 import React, {Component} from 'react';
 import Typist from 'react-typist';
 
-export defaults MyComponent extends Component {
+export default class MyComponent extends Component {
 
   render() {
     return (
@@ -49,23 +50,22 @@ blink. To include it, you must include
 
 
 ## Children
-Typist will animate the typing of its children in order, one after the other.
-It can receive as children any combination of one or many of the following:
+Typist will animate any text present in its children and descendents. Each text
+node will be animated as it is encountered in depth-first traversal of the
+children tree, one after the other. Typist can receive as children any objects
+a regular ReactComponent can.
 
-* `string`
-* `number`
-* `ReactElement` with a single child of type `string` or `number`
-* `ReactElement` with no children
-
-You can pass any props to the ReactElement children, including your own css classes.
-This allows you to easily style your text inside Typist:
+You can use any props in the children you pass to Typist, including your own
+css classes. This allows you to easily style your text inside Typist:
 
 ```jsx
 <Typist>
   <span className="my-custom-class"> First Sentence </span>
   <br />
-  <p> This will be animated after first sentence is complete </p>
-  <MyComponent prop1="val1"> More text. </MyComponent>
+  <div className="container">
+    <p> This will be animated after first sentence is complete </p>
+    <MyComponent prop1="val1"> More text. </MyComponent>
+  </div>
   Final sentence
 </Typist>
 ```
@@ -103,7 +103,7 @@ have the CSS class `Typist` applied to it.
 
 Average typing delay in milliseconds between every keystroke of the typing
 animation **(Less is faster)**. The distribution of the typing delays between
-strokes is not uniform, so as to make the animation more human like.
+strokes is not uniform, to make the animation more human like.
 
 <a name="stdTypingDelay"></a>
 #### stdTypingDelay
@@ -139,8 +139,8 @@ include the [css](#cssBlink)
 * `element (string)`: character to use for the cursor
 * `hideWhenDone (bool)`: wether the cursor should be hidden after tyiping
 animation is complete.
-* `hideWhenDoneDelay (int)`: delay to be applied before hiding cursor when typing
-animation is complete.
+* `hideWhenDoneDelay (int)`: delay in ms to be applied before hiding cursor when
+typing animation is complete.
 
 <a name="onTypingDone"></a>
 #### onTypingDone
@@ -171,7 +171,9 @@ function(mean, std, current = {line, lineIdx, character, charIdx, defDelayGenera
 generator function to be able to fall back to.
 
 
-This function can also be used to introduce delays in the typing animation.
+This function can also be used to introduce delays at specific points in the
+typing animation.
+
 e.g.:
 ```js
 function(mean, std, {line, lineIdx, charIdx, defDelayGenerator}) {
@@ -201,7 +203,9 @@ npm run examples
 #### To do
 
 * [x] Support delays in typing animation
-* [ ] Support arbitrary element trees
+* [x] Support arbitrary element trees
+* [ ] Refactor logic outside component, better maintainability
+* [ ] Improve performance of rendering arbitrary element trees
 * [ ] Support backspace animation
 
 

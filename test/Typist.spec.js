@@ -58,6 +58,14 @@ describe('Typist', ()=> {
         assertAnimation(inst, strs);
       });
 
+      it('animates elements in correct order', ()=> {
+        const strs = ['T1', 'T2'];
+        const els = [<div key="t1">T1</div>, <div key="t2"><span>T2</span></div>];
+        const inst = TestUtils.renderIntoDocument( <Typist {...props}>{els}</Typist>);
+
+        assertAnimation(inst, strs);
+      });
+
       it('animates strings and elements', ()=> {
         const strs = ['Test1', 'Test2'];
         const inst = TestUtils.renderIntoDocument(
@@ -71,6 +79,23 @@ describe('Typist', ()=> {
         expect(findDOMNode(inst).childNodes[1].tagName).toEqual('SPAN');
       });
 
+      it('animates element trees', ()=> {
+        const strs = ['Test1', 'Test2', 'Test3'];
+        const inst = TestUtils.renderIntoDocument(
+          <Typist {...props}>
+            <span>Test1</span>
+            <div>
+              <span>Test2</span>
+              <span>Test3</span>
+            </div>
+          </Typist>
+        );
+
+        assertAnimation(inst, strs);
+        expect(findDOMNode(inst).childNodes[0].tagName).toEqual('SPAN');
+        expect(findDOMNode(inst).childNodes[1].tagName).toEqual('DIV');
+      });
+
       it('renders empty elements', ()=> {
         const strs = ['Test1', 'Test2', ''];
         const inst = TestUtils.renderIntoDocument(
@@ -78,6 +103,7 @@ describe('Typist', ()=> {
             Test1
             <span>Test2</span>
             <br />
+            {''}
           </Typist>
         );
 

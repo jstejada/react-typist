@@ -17,10 +17,13 @@ class TypistExample extends React.Component {
 
   delayGen(mean, std, {line, lineIdx, charIdx, defDelayGenerator}) {
     if (lineIdx === 0 && charIdx === line.length - 1) {
-      return 1000;
+      return 1250;
     }
-    if (lineIdx === 2 && charIdx === line.length - 1) {
-      return 1000;
+    if (lineIdx === 1 && charIdx === line.length - 1) {
+      return 1250;
+    }
+    if (lineIdx === 3 && charIdx === line.length - 1) {
+      return 1250;
     }
     return defDelayGenerator(mean + 25);
   }
@@ -41,8 +44,9 @@ class TypistExample extends React.Component {
               <br />
               * Easy to customize
               <br />
-              <span>* </span><a href={docs} className="flash">docs</a>
+              <span>* <a href={docs} className="flash">docs</a></span>
               <br />
+              {''}
             </Typist>
           ) : null }
         </div>
