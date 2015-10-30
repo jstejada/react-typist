@@ -58,6 +58,14 @@ describe('Typist', ()=> {
         assertAnimation(inst, strs);
       });
 
+      it('animates elements in correct order', ()=> {
+        const strs = ['T1', 'T2'];
+        const els = [<div key="t1">T1</div>, <div key="t2"><span>T2</span></div>];
+        const inst = TestUtils.renderIntoDocument( <Typist {...props}>{els}</Typist>);
+
+        assertAnimation(inst, strs);
+      });
+
       it('animates strings and elements', ()=> {
         const strs = ['Test1', 'Test2'];
         const inst = TestUtils.renderIntoDocument(
