@@ -1,6 +1,7 @@
 # React Typist
-React Component for typing animations. Wrap Typist around any ReactComponent tree
-to animate text inside the tree. Easily stylable and highly configurable.
+React Component for typing animations. Wrap Typist around your text or any
+ReactComponent tree to animate text inside the tree. Easily stylable and highly
+configurable.
 
 
 ## Install
