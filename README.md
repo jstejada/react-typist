@@ -203,6 +203,7 @@ npm run examples
 
 * [x] Support delays in typing animation
 * [x] Support arbitrary element trees
+* [ ] Refactor logic outside component, better maintainability
 * [ ] Improve performance of rendering arbitrary element trees
 * [ ] Support backspace animation
 
