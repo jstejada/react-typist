@@ -141,7 +141,6 @@ module.exports =
 
 	    if (this.props.children) {
 	      this.toType = utils.extractText(this.props.children);
-	      this.elFactories = utils.extractElementFactories(this.props.children);
 
 	      if (this.props.startDelay > 0) {
 	        this.typeAll = setTimeout.bind(window, this.typeAll.bind(this), this.props.startDelay);
@@ -157,6 +156,16 @@ module.exports =
 	      } else {
 	        this.onTypingDone();
 	      }
+	    }
+	  }, {
+	    key: 'shouldComponentUpdate',
+	    value: function shouldComponentUpdate(nextProps, nextState) {
+	      for (var idx = 0; idx < nextState.text.length; idx++) {
+	        var txt = this.state.text[idx];
+	        var ntxt = nextState.text[idx];
+	        if (txt !== ntxt && ntxt.length > 0) return true;
+	      }
+	      return this.state.isDone !== nextState.isDone;
 	    }
 	  }, {
 	    key: 'typeAll',
@@ -187,18 +196,13 @@ module.exports =
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _this4 = this;
-
 	      var className = this.props.className;
-	      var els = this.state.text.map(function (line, idx) {
-	        var fact = _this4.elFactories[idx];
-	        return line.length > 0 ? fact(line) : fact();
-	      });
+	      var innerTree = utils.extractTreeWithText(this.props.children, this.state.text);
 
 	      return _react2['default'].createElement(
 	        'div',
 	        { className: 'Typist ' + className },
-	        els,
+	        innerTree,
 	        _react2['default'].createElement(_Cursor2['default'], _extends({ isDone: this.state.isDone }, this.props.cursor))
 	      );
 	    }
@@ -326,21 +330,24 @@ module.exports =
 	Object.defineProperty(exports, '__esModule', {
 	  value: true
 	});
+
+	var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }; })();
+
 	exports.gaussianRnd = gaussianRnd;
 	exports.asyncEach = asyncEach;
 	exports.eachRndTimeout = eachRndTimeout;
 	exports.exclude = exclude;
-	exports.validateTypeable = validateTypeable;
 	exports.extractText = extractText;
-	exports.extractElementFactories = extractElementFactories;
+	exports.elementFactoryMaker = elementFactoryMaker;
+	exports.extractTreeWithText = extractTreeWithText;
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
 
 	var _react = __webpack_require__(1);
 
 	var _react2 = _interopRequireDefault(_react);
-
-	var Console = console;
 
 	function gaussianRnd(mean, std) {
 	  var times = 12;
@@ -385,36 +392,101 @@ module.exports =
 	  return res;
 	}
 
-	function validateTypeable(obj) {
-	  if (typeof obj !== 'string' && typeof obj !== 'number') {
-	    Console.warn('The arguments passed as children to Typist must be ' + 'strings or numbers or ReactElements containing a single child of those types');
-	  }
-	  return obj.toString();
-	}
-
 	function extractText(toType) {
-	  var els = Array.isArray(toType) ? toType : [toType];
+	  var st = toType ? [toType] : [];
+	  var lines = [];
 
-	  return els.map(function (el) {
-	    var val = '';
-	    if (_react2['default'].isValidElement(el)) {
-	      val = el.props.children ? validateTypeable(el.props.children) : '';
+	  while (st.length > 0) {
+	    var cur = st.pop();
+
+	    if (_react2['default'].isValidElement(cur)) {
+	      _react2['default'].Children.forEach(cur.props.children, function (child) {
+	        st.push(child);
+	      });
 	    } else {
-	      val = validateTypeable(el);
+	      if (Array.isArray(cur)) {
+	        var _iteratorNormalCompletion = true;
+	        var _didIteratorError = false;
+	        var _iteratorError = undefined;
+
+	        try {
+	          for (var _iterator = cur[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	            var el = _step.value;
+
+	            st.push(el);
+	          }
+	        } catch (err) {
+	          _didIteratorError = true;
+	          _iteratorError = err;
+	        } finally {
+	          try {
+	            if (!_iteratorNormalCompletion && _iterator['return']) {
+	              _iterator['return']();
+	            }
+	          } finally {
+	            if (_didIteratorError) {
+	              throw _iteratorError;
+	            }
+	          }
+	        }
+	      } else {
+	        lines.unshift(cur);
+	      }
 	    }
-	    return val;
-	  });
+	  }
+	  return lines;
 	}
 
-	function extractElementFactories(toType) {
-	  var els = Array.isArray(toType) ? toType : [toType];
-
-	  return els.map(function (el, idx) {
-	    var tag = _react2['default'].isValidElement(el) ? el.type : 'span';
-	    var props = _react2['default'].isValidElement(el) ? exclude(el.props, ['children']) : {};
-	    props.key = ['Typist-line-' + idx];
+	function elementFactoryMaker() {
+	  var key = 0;
+	  return function (el) {
+	    var tag = el.type;
+	    var props = exclude(el.props, ['children']);
+	    props.key = 'Typist-el-' + key++;
 	    return _react2['default'].createElement.bind(null, tag, props);
-	  });
+	  };
+	}
+
+	function extractTreeWithText() {
+	  for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	    args[_key] = arguments[_key];
+	  }
+
+	  if (!args[0]) return void 0;
+	  var factMaker = elementFactoryMaker();
+
+	  var inner = function inner(tree, text, textIdx) {
+	    if (textIdx >= text.length) return [null, textIdx];
+	    var idx = textIdx;
+	    var recurse = function recurse(ch) {
+	      var _inner = inner(ch, text, idx);
+
+	      var _inner2 = _slicedToArray(_inner, 2);
+
+	      var child = _inner2[0];
+	      var advIdx = _inner2[1];
+
+	      idx = advIdx;
+	      return child;
+	    };
+
+	    // Recursively call on children of React Element
+	    if (_react2['default'].isValidElement(tree)) {
+	      var fact = factMaker(tree);
+	      var children = _react2['default'].Children.map(tree.props.children, recurse) || [];
+	      return [fact.apply(undefined, _toConsumableArray(children)), idx];
+	    }
+
+	    // Recursively call on array
+	    if (Array.isArray(tree)) {
+	      var children = tree.map(recurse);
+	      return [children, idx];
+	    }
+
+	    // Return text
+	    return [text[idx], idx + 1];
+	  };
+	  return inner.apply(undefined, args.concat([0]))[0];
 	}
 
 /***/ }
