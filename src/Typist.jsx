@@ -59,6 +59,12 @@ export default class Typist extends Component {
     return this.state.isDone !== nextState.isDone;
   }
 
+  componentWillUnmount() {
+    if (this.clearTimers) {
+      this.clearTimers();
+    }
+  }
+
   onTypingDone = ()=> {
     this.setState({isDone: true});
     this.props.onTypingDone();
@@ -89,7 +95,7 @@ export default class Typist extends Component {
   }
 
   typeStr(line, idx, onDone = ()=>{}) {
-    utils.eachRndTimeout(
+    this.clearTimers = utils.eachRndTimeout(
       line,
       (ch, adv)=> {
         const text = this.state.text.slice();
