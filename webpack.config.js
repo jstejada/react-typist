@@ -23,9 +23,9 @@ module.exports = {
       {
         test: /\.jsx?$/,
         exclude: /(node_modules|bower_components)/,
-        loaders: ['babel?optional=es7.classProperties', 'eslint']
-      }
-    ]
+        loaders: ['babel', 'eslint'],
+      },
+    ],
   },
   plugins: [
     new ExtractTextPlugin('main.css', {allChunks: true})
