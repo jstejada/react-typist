@@ -53,8 +53,6 @@ module.exports =
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 	var _react = __webpack_require__(1);
 
 	var _react2 = _interopRequireDefault(_react);
@@ -67,9 +65,9 @@ module.exports =
 
 	var utils = _interopRequireWildcard(_utils);
 
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -83,7 +81,7 @@ module.exports =
 	  function Typist(props) {
 	    _classCallCheck(this, Typist);
 
-	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Typist).call(this, props));
+	    var _this = _possibleConstructorReturn(this, _Component.call(this, props));
 
 	    _this.state = {
 	      text: [],
@@ -111,9 +109,8 @@ module.exports =
 	      });
 	    };
 
-	    if (_this.props.children) {
-	      _this.toType = utils.extractText(_this.props.children);
-
+	    if (props.children) {
+	      _this.toType = utils.extractText(props.children);
 	      if (_this.props.startDelay > 0) {
 	        _this.typeAll = setTimeout.bind(window, _this.typeAll.bind(_this), _this.props.startDelay);
 	      }
@@ -121,72 +118,64 @@ module.exports =
 	    return _this;
 	  }
 
-	  _createClass(Typist, [{
-	    key: 'componentDidMount',
-	    value: function componentDidMount() {
-	      if (this.props.children) {
-	        this.typeAll();
-	      } else {
-	        this.onTypingDone();
-	      }
+	  Typist.prototype.componentDidMount = function componentDidMount() {
+	    if (this.props.children) {
+	      this.typeAll();
+	    } else {
+	      this.onTypingDone();
 	    }
-	  }, {
-	    key: 'shouldComponentUpdate',
-	    value: function shouldComponentUpdate(nextProps, nextState) {
-	      for (var idx = 0; idx < nextState.text.length; idx++) {
-	        var txt = this.state.text[idx];
-	        var ntxt = nextState.text[idx];
-	        if (txt !== ntxt && ntxt.length > 0) return true;
-	      }
-	      return this.state.isDone !== nextState.isDone;
-	    }
-	  }, {
-	    key: 'componentWillUnmount',
-	    value: function componentWillUnmount() {
-	      if (this.clearTimers) {
-	        this.clearTimers();
-	      }
-	    }
-	  }, {
-	    key: 'typeAll',
-	    value: function typeAll() {
-	      var _this2 = this;
+	  };
 
-	      var strs = arguments.length <= 0 || arguments[0] === undefined ? this.toType : arguments[0];
-
-	      utils.asyncEach(strs, function (line, adv, idx) {
-	        _this2.setState({ text: _this2.state.text.concat(['']) }, function () {
-	          _this2.typeStr(line, idx, adv);
-	        });
-	      }, this.onTypingDone);
+	  Typist.prototype.shouldComponentUpdate = function shouldComponentUpdate(nextProps, nextState) {
+	    for (var idx = 0; idx < nextState.text.length; idx++) {
+	      var txt = this.state.text[idx];
+	      var ntxt = nextState.text[idx];
+	      if (txt !== ntxt && ntxt.length > 0) return true;
 	    }
-	  }, {
-	    key: 'typeStr',
-	    value: function typeStr(line, idx) {
-	      var _this3 = this;
+	    return this.state.isDone !== nextState.isDone;
+	  };
 
-	      var onDone = arguments.length <= 2 || arguments[2] === undefined ? function () {} : arguments[2];
-
-	      this.clearTimers = utils.eachRndTimeout(line, function (ch, adv) {
-	        var text = _this3.state.text.slice();
-	        text[idx] += ch;
-	        _this3.setState({ text: text }, adv);
-	      }, onDone, this.delayGenerator.bind(this, line, idx));
+	  Typist.prototype.componentWillUnmount = function componentWillUnmount() {
+	    if (this.clearTimers) {
+	      this.clearTimers();
 	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      var className = this.props.className;
-	      var innerTree = utils.extractTreeWithText(this.props.children, this.state.text);
+	  };
 
-	      return _react2.default.createElement(
-	        'div',
-	        { className: 'Typist ' + className },
-	        innerTree,
-	        _react2.default.createElement(_Cursor2.default, _extends({ isDone: this.state.isDone }, this.props.cursor))
-	      );
-	    }
-	  }]);
+	  Typist.prototype.typeAll = function typeAll() {
+	    var _this2 = this;
+
+	    var strs = arguments.length <= 0 || arguments[0] === undefined ? this.toType : arguments[0];
+
+	    utils.asyncEach(strs, function (line, adv, idx) {
+	      _this2.setState({ text: _this2.state.text.concat(['']) }, function () {
+	        _this2.typeStr(line, idx, adv);
+	      });
+	    }, this.onTypingDone);
+	  };
+
+	  Typist.prototype.typeStr = function typeStr(line, idx) {
+	    var _this3 = this;
+
+	    var onDone = arguments.length <= 2 || arguments[2] === undefined ? function () {} : arguments[2];
+
+	    this.clearTimers = utils.eachRndTimeout(line, function (ch, adv) {
+	      var text = _this3.state.text.slice();
+	      text[idx] += ch;
+	      _this3.setState({ text: text }, adv);
+	    }, onDone, this.delayGenerator.bind(this, line, idx));
+	  };
+
+	  Typist.prototype.render = function render() {
+	    var className = this.props.className;
+	    var innerTree = utils.extractTreeWithText(this.props.children, this.state.text);
+
+	    return _react2['default'].createElement(
+	      'div',
+	      { className: 'Typist ' + className },
+	      innerTree,
+	      _react2['default'].createElement(_Cursor2['default'], _extends({ isDone: this.state.isDone }, this.props.cursor))
+	    );
+	  };
 
 	  return Typist;
 	}(_react.Component);
@@ -210,7 +199,7 @@ module.exports =
 	  onTypingDone: function onTypingDone() {},
 	  delayGenerator: utils.gaussianRnd
 	};
-	exports.default = Typist;
+	exports['default'] = Typist;
 
 /***/ },
 /* 1 */
@@ -228,15 +217,13 @@ module.exports =
 	  value: true
 	});
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 	var _react = __webpack_require__(1);
 
 	var _react2 = _interopRequireDefault(_react);
 
 	__webpack_require__(3);
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -250,7 +237,7 @@ module.exports =
 	  function Cursor(props) {
 	    _classCallCheck(this, Cursor);
 
-	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Cursor).call(this, props));
+	    var _this = _possibleConstructorReturn(this, _Component.call(this, props));
 
 	    _this.state = {
 	      shouldRender: _this.props.show
@@ -258,32 +245,28 @@ module.exports =
 	    return _this;
 	  }
 
-	  _createClass(Cursor, [{
-	    key: 'componentWillReceiveProps',
-	    value: function componentWillReceiveProps(nextProps) {
-	      var _this2 = this;
+	  Cursor.prototype.componentWillReceiveProps = function componentWillReceiveProps(nextProps) {
+	    var _this2 = this;
 
-	      var shouldHide = !this.props.isDone && nextProps.isDone && this.props.hideWhenDone;
-	      if (shouldHide) {
-	        setTimeout(function () {
-	          return _this2.setState({ shouldRender: false });
-	        }, this.props.hideWhenDoneDelay);
-	      }
+	    var shouldHide = !this.props.isDone && nextProps.isDone && this.props.hideWhenDone;
+	    if (shouldHide) {
+	      setTimeout(function () {
+	        return _this2.setState({ shouldRender: false });
+	      }, this.props.hideWhenDoneDelay);
 	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      if (this.state.shouldRender) {
-	        var className = this.props.blink ? ' Cursor--blinking' : '';
-	        return _react2.default.createElement(
-	          'span',
-	          { className: 'Cursor' + className },
-	          this.props.element
-	        );
-	      }
-	      return null;
+	  };
+
+	  Cursor.prototype.render = function render() {
+	    if (this.state.shouldRender) {
+	      var className = this.props.blink ? ' Cursor--blinking' : '';
+	      return _react2['default'].createElement(
+	        'span',
+	        { className: 'Cursor' + className },
+	        this.props.element
+	      );
 	    }
-	  }]);
+	    return null;
+	  };
 
 	  return Cursor;
 	}(_react.Component);
@@ -304,7 +287,7 @@ module.exports =
 	  hideWhenDoneDelay: 1000,
 	  isDone: false
 	};
-	exports.default = Cursor;
+	exports['default'] = Cursor;
 
 /***/ },
 /* 3 */
@@ -336,7 +319,7 @@ module.exports =
 
 	var _react2 = _interopRequireDefault(_react);
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
@@ -396,8 +379,8 @@ module.exports =
 	  while (st.length > 0) {
 	    var cur = st.pop();
 
-	    if (_react2.default.isValidElement(cur)) {
-	      _react2.default.Children.forEach(cur.props.children, function (child) {
+	    if (_react2['default'].isValidElement(cur)) {
+	      _react2['default'].Children.forEach(cur.props.children, function (child) {
 	        st.push(child);
 	      });
 	    } else {
@@ -417,8 +400,8 @@ module.exports =
 	          _iteratorError = err;
 	        } finally {
 	          try {
-	            if (!_iteratorNormalCompletion && _iterator.return) {
-	              _iterator.return();
+	            if (!_iteratorNormalCompletion && _iterator['return']) {
+	              _iterator['return']();
 	            }
 	          } finally {
 	            if (_didIteratorError) {
@@ -440,7 +423,7 @@ module.exports =
 	    var tag = el.type;
 	    var props = exclude(el.props, ['children']);
 	    props.key = 'Typist-el-' + key++;
-	    return _react2.default.createElement.bind(null, tag, props);
+	    return _react2['default'].createElement.bind(null, tag, props);
 	  };
 	}
 
@@ -468,9 +451,9 @@ module.exports =
 	    };
 
 	    // Recursively call on children of React Element
-	    if (_react2.default.isValidElement(tree)) {
+	    if (_react2['default'].isValidElement(tree)) {
 	      var fact = factMaker(tree);
-	      var children = _react2.default.Children.map(tree.props.children, recurse) || [];
+	      var children = _react2['default'].Children.map(tree.props.children, recurse) || [];
 	      return [fact.apply(undefined, _toConsumableArray(children)), idx];
 	    }
 

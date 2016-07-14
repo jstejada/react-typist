@@ -1,4 +1,14 @@
 {
   "presets": ["react", "es2015"],
-  "plugins": ["transform-class-properties"]
+  "plugins": [
+    "transform-es2015-object-super",
+    "transform-es2015-block-scoping",
+    "transform-es3-property-literals",
+    "transform-es3-member-expression-literals",
+    "transform-class-properties",
+    [
+      "transform-es2015-classes",
+      {"loose": true}
+    ]
+  ]
 }
