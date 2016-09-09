@@ -31,7 +31,7 @@ export default class Typist extends Component {
     if (this.props.children) {
       this.toType = utils.extractText(this.props.children);
 
-      if (this.props.startDelay > 0) {
+      if (this.props.startDelay > 0 && typeof window !== 'undefined') {
         this.typeAll = setTimeout.bind(window, this.typeAll.bind(this), this.props.startDelay);
       }
     }
@@ -43,6 +43,7 @@ export default class Typist extends Component {
   }
 
   componentDidMount() {
+    this.mounted = true;
     if (this.props.children) {
       this.typeAll();
     } else {
@@ -57,6 +58,10 @@ export default class Typist extends Component {
       if (txt !== ntxt && ntxt.length > 0) return true;
     }
     return this.state.isDone !== nextState.isDone;
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
   }
 
   onTypingDone = ()=> {
@@ -82,9 +87,11 @@ export default class Typist extends Component {
 
   typeAll(strs = this.toType) {
     utils.asyncEach(strs, (line, adv, idx)=> {
-      this.setState({text: this.state.text.concat([''])}, ()=> {
-        this.typeStr(line, idx, adv);
-      });
+      if (this.mounted === true) {
+        this.setState({text: this.state.text.concat([''])}, ()=> {
+          this.typeStr(line, idx, adv);
+        });
+      }
     }, this.onTypingDone);
   }
 
