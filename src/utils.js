@@ -24,11 +24,17 @@ export function asyncEach(arr, callback, onDone = ()=> {}) {
 }
 
 export function eachRndTimeout(arr, callback, onDone, rndFn) {
+  const timeouts = [];
   asyncEach(arr, (el, adv, idx)=> {
     callback(el, ()=> {
-      setTimeout(adv, rndFn(el, idx));
+      timeouts.push(
+        setTimeout(adv, rndFn(el, idx))
+      );
     });
   }, onDone);
+  return () => {
+    timeouts.map(timeout => clearTimeout(timeout));
+  };
 }
 
 export function exclude(obj, keys) {

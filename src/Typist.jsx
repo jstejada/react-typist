@@ -28,9 +28,8 @@ export default class Typist extends Component {
 
   constructor(props) {
     super(props);
-    if (this.props.children) {
-      this.toType = utils.extractText(this.props.children);
-
+    if (props.children) {
+      this.toType = utils.extractText(props.children);
       if (this.props.startDelay > 0) {
         this.typeAll = setTimeout.bind(window, this.typeAll.bind(this), this.props.startDelay);
       }
@@ -57,6 +56,12 @@ export default class Typist extends Component {
       if (txt !== ntxt && ntxt.length > 0) return true;
     }
     return this.state.isDone !== nextState.isDone;
+  }
+
+  componentWillUnmount() {
+    if (this.clearTimers) {
+      this.clearTimers();
+    }
   }
 
   onTypingDone = ()=> {
@@ -89,7 +94,7 @@ export default class Typist extends Component {
   }
 
   typeStr(line, idx, onDone = ()=>{}) {
-    utils.eachRndTimeout(
+    this.clearTimers = utils.eachRndTimeout(
       line,
       (ch, adv)=> {
         const text = this.state.text.slice();
