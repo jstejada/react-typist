@@ -1,5 +1,11 @@
 # React Typist Changelog
 
+### v1.0.1 (10/01/16)
+
+- Fixes
+  + Move `promise-mock` as a `devDepencency`
+
+
 ### v1.0.0 (10/01/16)
 
 This version should have no breaking changes, but given that we've bumped a
