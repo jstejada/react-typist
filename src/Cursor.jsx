@@ -1,4 +1,4 @@
-import React, {Component, PropTypes} from 'react';
+import React, { Component, PropTypes } from 'react';
 import './Cursor.scss';
 
 
@@ -22,10 +22,6 @@ export default class Cursor extends Component {
     isDone: false,
   }
 
-  constructor(props) {
-    super(props);
-  }
-
   state = {
     shouldRender: this.props.show,
   }
@@ -33,7 +29,7 @@ export default class Cursor extends Component {
   componentWillReceiveProps(nextProps) {
     const shouldHide = !this.props.isDone && nextProps.isDone && this.props.hideWhenDone;
     if (shouldHide) {
-      setTimeout(()=> this.setState({shouldRender: false}), this.props.hideWhenDoneDelay);
+      setTimeout(() => this.setState({ shouldRender: false }), this.props.hideWhenDoneDelay);
     }
   }
 

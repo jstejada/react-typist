@@ -1,4 +1,3 @@
-
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Typist from 'Typist';
@@ -11,11 +10,11 @@ class TypistExample extends React.Component {
     renderMsg: false,
   }
 
-  onHeaderTyped = ()=> {
-    this.setState({renderMsg: true});
+  onHeaderTyped = () => {
+    this.setState({ renderMsg: true });
   }
 
-  delayGen(mean, std, {line, lineIdx, charIdx, defDelayGenerator}) {
+  delayGen(mean, std, { line, lineIdx, charIdx, defDelayGenerator }) {
     if (lineIdx === 0 && charIdx === line.length - 1) {
       return 1250;
     }
@@ -32,14 +31,21 @@ class TypistExample extends React.Component {
     const docs = '//github.com/jstejada/react-typist';
     return (
       <div className="TypistExample">
-        <Typist className="TypistExample-header" avgTypingSpeed={40} startDelay={2000}
-          onTypingDone={this.onHeaderTyped}>
+        <Typist
+          className="TypistExample-header"
+          avgTypingSpeed={40}
+          startDelay={2000}
+          onTypingDone={this.onHeaderTyped}
+        >
           <a href={docs}>React Typist</a>
         </Typist>
         <div className="TypistExample-content">
           {this.state.renderMsg ? (
-            <Typist className="TypistExample-message" delayGenerator={this.delayGen}
-              cursor={{hideWhenDone: true}}>
+            <Typist
+              className="TypistExample-message"
+              delayGenerator={this.delayGen}
+              cursor={{ hideWhenDone: true }}
+            >
               * Easy to style
               <br />
               * Easy to customize

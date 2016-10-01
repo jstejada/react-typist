@@ -13,7 +13,7 @@ export function gaussianRnd(mean, std) {
 }
 
 export function eachPromise(arr, iterator) {
-  const {length} = arr;
+  const { length } = arr;
   return Array.from(arr).reduce((prev, current, idx) =>
     prev.then(() =>
       Promise.resolve(current)
@@ -40,7 +40,7 @@ export function extractText(toType) {
     const cur = st.pop();
 
     if (React.isValidElement(cur)) {
-      React.Children.forEach(cur.props.children, (child)=> {
+      React.Children.forEach(cur.props.children, (child) => {
         st.push(child);
       });
     } else {
@@ -58,7 +58,7 @@ export function extractText(toType) {
 
 export function elementFactoryMaker() {
   let key = 0;
-  return (el)=> {
+  return (el) => {
     const tag = el.type;
     const props = exclude(el.props, ['children']);
     props.key = `Typist-el-${key++}`;
@@ -70,10 +70,10 @@ export function extractTreeWithText(...args) {
   if (!args[0]) return void(0);
   const factMaker = elementFactoryMaker();
 
-  const inner = (tree, text, textIdx)=> {
+  const inner = (tree, text, textIdx) => {
     if (textIdx >= text.length) return [null, textIdx];
     let idx = textIdx;
-    const recurse = (ch)=> {
+    const recurse = (ch) => {
       const [child, advIdx] = inner(ch, text, idx);
       idx = advIdx;
       return child;

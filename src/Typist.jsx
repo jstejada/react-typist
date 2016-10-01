@@ -1,4 +1,4 @@
-import React, {Component, PropTypes} from 'react';
+import React, { Component, PropTypes } from 'react';
 import Cursor from './Cursor';
 import * as utils from './utils';
 
@@ -43,7 +43,7 @@ export default class Typist extends Component {
 
   componentDidMount() {
     this.mounted = true;
-    const {children, startDelay} = this.props;
+    const { children, startDelay } = this.props;
     if (children) {
       if (startDelay > 0 && typeof window !== 'undefined') {
         setTimeout(this.typeAllLines.bind(this), startDelay);
@@ -69,7 +69,7 @@ export default class Typist extends Component {
   }
 
   onTypingDone = () => {
-    this.setState({isDone: true});
+    this.setState({ isDone: true });
     this.props.onTypingDone();
   }
 
@@ -93,7 +93,7 @@ export default class Typist extends Component {
     return utils.eachPromise(lines, (line, idx) => {
       if (!this.mounted) { return Promise.resolve(); }
       return new Promise((resolve) => {
-        this.setState({text: this.state.text.concat([''])}, ()=> {
+        this.setState({ text: this.state.text.concat(['']) }, () => {
           this.typeLine(line, idx).then(resolve);
         });
       });
@@ -107,7 +107,7 @@ export default class Typist extends Component {
       return new Promise((resolve) => {
         const text = this.state.text.slice();
         text[lineIdx] += character;
-        this.setState({text}, () => {
+        this.setState({ text }, () => {
           const delay = this.delayGenerator(line, lineIdx, character, charIdx);
           setTimeout(resolve, delay);
         });
@@ -116,8 +116,8 @@ export default class Typist extends Component {
   }
 
   render() {
-    const {className, cursor} = this.props;
-    const {isDone} = this.state;
+    const { className, cursor } = this.props;
+    const { isDone } = this.state;
     const innerTree = utils.extractTreeWithText(this.props.children, this.state.text);
 
     return (
