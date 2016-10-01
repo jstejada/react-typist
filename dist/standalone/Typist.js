@@ -56,23 +56,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	var _get = function get(_x5, _x6, _x7) { var _again = true; _function: while (_again) { var object = _x5, property = _x6, receiver = _x7; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x5 = parent; _x6 = property; _x7 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _react = __webpack_require__(1);
 
@@ -86,53 +76,35 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var utils = _interopRequireWildcard(_utils);
 
-	var Typist = (function (_Component) {
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Typist = function (_Component) {
 	  _inherits(Typist, _Component);
 
-	  _createClass(Typist, null, [{
-	    key: 'propTypes',
-	    value: {
-	      children: _react.PropTypes.node,
-	      className: _react.PropTypes.string,
-	      avgTypingDelay: _react.PropTypes.number,
-	      stdTypingDelay: _react.PropTypes.number,
-	      startDelay: _react.PropTypes.number,
-	      cursor: _react.PropTypes.object,
-	      onTypingDone: _react.PropTypes.func,
-	      delayGenerator: _react.PropTypes.func
-	    },
-	    enumerable: true
-	  }, {
-	    key: 'defaultProps',
-	    value: {
-	      className: '',
-	      avgTypingDelay: 70,
-	      stdTypingDelay: 25,
-	      startDelay: 0,
-	      cursor: {},
-	      onTypingDone: function onTypingDone() {},
-	      delayGenerator: utils.gaussianRnd
-	    },
-	    enumerable: true
-	  }]);
-
 	  function Typist(props) {
-	    var _this = this;
-
 	    _classCallCheck(this, Typist);
 
-	    _get(Object.getPrototypeOf(Typist.prototype), 'constructor', this).call(this, props);
-	    this.state = {
+	    var _this = _possibleConstructorReturn(this, (Typist.__proto__ || Object.getPrototypeOf(Typist)).call(this, props));
+
+	    _this.state = {
 	      text: [],
 	      isDone: false
 	    };
 
-	    this.onTypingDone = function () {
+	    _this.onTypingDone = function () {
 	      _this.setState({ isDone: true });
 	      _this.props.onTypingDone();
 	    };
 
-	    this.delayGenerator = function (line, lineIdx, character, charIdx) {
+	    _this.delayGenerator = function (line, lineIdx, character, charIdx) {
 	      var mean = _this.props.avgTypingDelay;
 	      var std = _this.props.stdTypingDelay;
 	      return _this.props.delayGenerator(mean, std, {
@@ -141,28 +113,36 @@ return /******/ (function(modules) { // webpackBootstrap
 	        character: character,
 	        charIdx: charIdx,
 	        defDelayGenerator: function defDelayGenerator() {
-	          var mn = arguments.length <= 0 || arguments[0] === undefined ? mean : arguments[0];
-	          var st = arguments.length <= 1 || arguments[1] === undefined ? std : arguments[1];
+	          var mn = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : mean;
+	          var st = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : std;
 	          return utils.gaussianRnd(mn, st);
 	        }
 	      });
 	    };
 
-	    if (this.props.children) {
-	      this.toType = utils.extractText(this.props.children);
+	    _this.mounted = false;
+	    _this.linesToType = [];
 
-	      if (this.props.startDelay > 0 && typeof window !== 'undefined') {
-	        this.typeAll = setTimeout.bind(window, this.typeAll.bind(this), this.props.startDelay);
-	      }
+	    if (props.children) {
+	      _this.linesToType = utils.extractText(props.children);
 	    }
+	    return _this;
 	  }
 
 	  _createClass(Typist, [{
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      this.mounted = true;
-	      if (this.props.children) {
-	        this.typeAll();
+	      var _props = this.props;
+	      var children = _props.children;
+	      var startDelay = _props.startDelay;
+
+	      if (children) {
+	        if (startDelay > 0 && typeof window !== 'undefined') {
+	          setTimeout(this.typeAllLines.bind(this), startDelay);
+	        } else {
+	          this.typeAllLines();
+	        }
 	      } else {
 	        this.onTypingDone();
 	      }
@@ -183,53 +163,86 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.mounted = false;
 	    }
 	  }, {
-	    key: 'typeAll',
-	    value: function typeAll() {
+	    key: 'typeAllLines',
+	    value: function typeAllLines() {
 	      var _this2 = this;
 
-	      var strs = arguments.length <= 0 || arguments[0] === undefined ? this.toType : arguments[0];
+	      var lines = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.linesToType;
 
-	      utils.asyncEach(strs, function (line, adv, idx) {
-	        if (_this2.mounted === true) {
-	          _this2.setState({ text: _this2.state.text.concat(['']) }, function () {
-	            _this2.typeStr(line, idx, adv);
-	          });
+	      return utils.eachPromise(lines, function (line, idx) {
+	        if (!_this2.mounted) {
+	          return Promise.resolve();
 	        }
-	      }, this.onTypingDone);
+	        return new Promise(function (resolve) {
+	          _this2.setState({ text: _this2.state.text.concat(['']) }, function () {
+	            _this2.typeLine(line, idx).then(resolve);
+	          });
+	        });
+	      }).then(function () {
+	        return _this2.onTypingDone();
+	      });
 	    }
 	  }, {
-	    key: 'typeStr',
-	    value: function typeStr(line, idx) {
+	    key: 'typeLine',
+	    value: function typeLine(line, lineIdx) {
 	      var _this3 = this;
 
-	      var onDone = arguments.length <= 2 || arguments[2] === undefined ? function () {} : arguments[2];
-
-	      utils.eachRndTimeout(line, function (ch, adv) {
-	        var text = _this3.state.text.slice();
-	        text[idx] += ch;
-	        _this3.setState({ text: text }, adv);
-	      }, onDone, this.delayGenerator.bind(this, line, idx));
+	      return utils.eachPromise(line, function (character, charIdx) {
+	        if (!_this3.mounted) {
+	          return Promise.resolve();
+	        }
+	        return new Promise(function (resolve) {
+	          var text = _this3.state.text.slice();
+	          text[lineIdx] += character;
+	          _this3.setState({ text: text }, function () {
+	            var delay = _this3.delayGenerator(line, lineIdx, character, charIdx);
+	            setTimeout(resolve, delay);
+	          });
+	        });
+	      });
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var className = this.props.className;
+	      var _props2 = this.props;
+	      var className = _props2.className;
+	      var cursor = _props2.cursor;
+	      var isDone = this.state.isDone;
+
 	      var innerTree = utils.extractTreeWithText(this.props.children, this.state.text);
 
-	      return _react2['default'].createElement(
+	      return _react2.default.createElement(
 	        'div',
 	        { className: 'Typist ' + className },
 	        innerTree,
-	        _react2['default'].createElement(_Cursor2['default'], _extends({ isDone: this.state.isDone }, this.props.cursor))
+	        _react2.default.createElement(_Cursor2.default, _extends({ isDone: isDone }, cursor))
 	      );
 	    }
 	  }]);
 
 	  return Typist;
-	})(_react.Component);
+	}(_react.Component);
 
-	exports['default'] = Typist;
-	module.exports = exports['default'];
+	Typist.propTypes = {
+	  children: _react.PropTypes.node,
+	  className: _react.PropTypes.string,
+	  avgTypingDelay: _react.PropTypes.number,
+	  stdTypingDelay: _react.PropTypes.number,
+	  startDelay: _react.PropTypes.number,
+	  cursor: _react.PropTypes.object,
+	  onTypingDone: _react.PropTypes.func,
+	  delayGenerator: _react.PropTypes.func
+	};
+	Typist.defaultProps = {
+	  className: '',
+	  avgTypingDelay: 70,
+	  stdTypingDelay: 25,
+	  startDelay: 0,
+	  cursor: {},
+	  onTypingDone: function onTypingDone() {},
+	  delayGenerator: utils.gaussianRnd
+	};
+	exports.default = Typist;
 
 /***/ },
 /* 1 */
@@ -243,19 +256,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
 
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _react = __webpack_require__(1);
 
@@ -263,51 +268,42 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	__webpack_require__(3);
 
-	var Cursor = (function (_Component) {
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Cursor = function (_Component) {
 	  _inherits(Cursor, _Component);
 
-	  _createClass(Cursor, null, [{
-	    key: 'propTypes',
-	    value: {
-	      blink: _react.PropTypes.bool,
-	      show: _react.PropTypes.bool,
-	      element: _react.PropTypes.node,
-	      hideWhenDone: _react.PropTypes.bool,
-	      hideWhenDoneDelay: _react.PropTypes.number,
-	      isDone: _react.PropTypes.bool
-	    },
-	    enumerable: true
-	  }, {
-	    key: 'defaultProps',
-	    value: {
-	      blink: true,
-	      show: true,
-	      element: '|',
-	      hideWhenDone: false,
-	      hideWhenDoneDelay: 1000,
-	      isDone: false
-	    },
-	    enumerable: true
-	  }]);
+	  function Cursor() {
+	    var _ref;
 
-	  function Cursor(props) {
+	    var _temp, _this, _ret;
+
 	    _classCallCheck(this, Cursor);
 
-	    _get(Object.getPrototypeOf(Cursor.prototype), 'constructor', this).call(this, props);
-	    this.state = {
-	      shouldRender: this.props.show
-	    };
+	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	      args[_key] = arguments[_key];
+	    }
+
+	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Cursor.__proto__ || Object.getPrototypeOf(Cursor)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
+	      shouldRender: _this.props.show
+	    }, _temp), _possibleConstructorReturn(_this, _ret);
 	  }
 
 	  _createClass(Cursor, [{
 	    key: 'componentWillReceiveProps',
 	    value: function componentWillReceiveProps(nextProps) {
-	      var _this = this;
+	      var _this2 = this;
 
 	      var shouldHide = !this.props.isDone && nextProps.isDone && this.props.hideWhenDone;
 	      if (shouldHide) {
 	        setTimeout(function () {
-	          return _this.setState({ shouldRender: false });
+	          return _this2.setState({ shouldRender: false });
 	        }, this.props.hideWhenDoneDelay);
 	      }
 	    }
@@ -316,7 +312,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function render() {
 	      if (this.state.shouldRender) {
 	        var className = this.props.blink ? ' Cursor--blinking' : '';
-	        return _react2['default'].createElement(
+	        return _react2.default.createElement(
 	          'span',
 	          { className: 'Cursor' + className },
 	          this.props.element
@@ -327,10 +323,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }]);
 
 	  return Cursor;
-	})(_react.Component);
+	}(_react.Component);
 
-	exports['default'] = Cursor;
-	module.exports = exports['default'];
+	Cursor.propTypes = {
+	  blink: _react.PropTypes.bool,
+	  show: _react.PropTypes.bool,
+	  element: _react.PropTypes.node,
+	  hideWhenDone: _react.PropTypes.bool,
+	  hideWhenDoneDelay: _react.PropTypes.number,
+	  isDone: _react.PropTypes.bool
+	};
+	Cursor.defaultProps = {
+	  blink: true,
+	  show: true,
+	  element: '|',
+	  hideWhenDone: false,
+	  hideWhenDoneDelay: 1000,
+	  isDone: false
+	};
+	exports.default = Cursor;
 
 /***/ },
 /* 3 */
@@ -344,27 +355,33 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.sleep = undefined;
 
-	var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }; })();
+	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
 	exports.gaussianRnd = gaussianRnd;
-	exports.asyncEach = asyncEach;
-	exports.eachRndTimeout = eachRndTimeout;
+	exports.eachPromise = eachPromise;
 	exports.exclude = exclude;
 	exports.extractText = extractText;
 	exports.elementFactoryMaker = elementFactoryMaker;
 	exports.extractTreeWithText = extractTreeWithText;
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
-
 	var _react = __webpack_require__(1);
 
 	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+	var sleep = exports.sleep = function sleep(val) {
+	  return new Promise(function (resolve) {
+	    return setTimeout(resolve, val);
+	  });
+	};
 
 	function gaussianRnd(mean, std) {
 	  var times = 12;
@@ -376,27 +393,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return Math.round(sum * std) + mean;
 	}
 
-	function asyncEach(arr, callback) {
-	  var onDone = arguments.length <= 2 || arguments[2] === undefined ? function () {} : arguments[2];
+	function eachPromise(arr, iterator) {
+	  var length = arr.length;
 
-	  var count = 0;
-	  var adv = function adv() {
-	    if (count === arr.length) {
-	      return onDone();
-	    }
-	    var idx = count;
-	    count++;
-	    callback(arr[idx], adv, idx);
-	  };
-	  adv();
-	}
-
-	function eachRndTimeout(arr, callback, onDone, rndFn) {
-	  asyncEach(arr, function (el, adv, idx) {
-	    callback(el, function () {
-	      setTimeout(adv, rndFn(el, idx));
+	  return Array.from(arr).reduce(function (prev, current, idx) {
+	    return prev.then(function () {
+	      return Promise.resolve(current).then(function (val) {
+	        return iterator(val, idx, length);
+	      });
 	    });
-	  }, onDone);
+	  }, Promise.resolve());
 	}
 
 	function exclude(obj, keys) {
@@ -416,8 +422,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  while (st.length > 0) {
 	    var cur = st.pop();
 
-	    if (_react2['default'].isValidElement(cur)) {
-	      _react2['default'].Children.forEach(cur.props.children, function (child) {
+	    if (_react2.default.isValidElement(cur)) {
+	      _react2.default.Children.forEach(cur.props.children, function (child) {
 	        st.push(child);
 	      });
 	    } else {
@@ -437,8 +443,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	          _iteratorError = err;
 	        } finally {
 	          try {
-	            if (!_iteratorNormalCompletion && _iterator['return']) {
-	              _iterator['return']();
+	            if (!_iteratorNormalCompletion && _iterator.return) {
+	              _iterator.return();
 	            }
 	          } finally {
 	            if (_didIteratorError) {
@@ -460,7 +466,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var tag = el.type;
 	    var props = exclude(el.props, ['children']);
 	    props.key = 'Typist-el-' + key++;
-	    return _react2['default'].createElement.bind(null, tag, props);
+	    return _react2.default.createElement.bind(null, tag, props);
 	  };
 	}
 
@@ -488,16 +494,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 
 	    // Recursively call on children of React Element
-	    if (_react2['default'].isValidElement(tree)) {
+	    if (_react2.default.isValidElement(tree)) {
 	      var fact = factMaker(tree);
-	      var children = _react2['default'].Children.map(tree.props.children, recurse) || [];
+	      var children = _react2.default.Children.map(tree.props.children, recurse) || [];
 	      return [fact.apply(undefined, _toConsumableArray(children)), idx];
 	    }
 
 	    // Recursively call on array
 	    if (Array.isArray(tree)) {
-	      var children = tree.map(recurse);
-	      return [children, idx];
+	      var _children = tree.map(recurse);
+	      return [_children, idx];
 	    }
 
 	    // Return text

@@ -1,6 +1,6 @@
 {
   "name": "react-typist",
-  "version": "0.3.0",
+  "version": "1.0.0",
   "description": "Typing animations with React",
   "main": "dist/Typist.js",
   "scripts": {
@@ -32,8 +32,8 @@
   "author": "Juan Tejada",
   "license": "MIT",
   "peerDependencies": {
-    "react": "^0.14 || ^15.0",
-    "react-dom": "^0.14 || ^15.0"
+    "react": "^15.0",
+    "react-dom": "^15.0"
   },
   "devDependencies": {
     "autoprefixer": "^6.3.3",
