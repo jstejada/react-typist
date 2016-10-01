@@ -1,5 +1,7 @@
 import React from 'react';
 
+export const sleep = (val) => new Promise((resolve) => setTimeout(resolve, val));
+
 export function gaussianRnd(mean, std) {
   const times = 12;
   let sum = 0;
@@ -10,25 +12,14 @@ export function gaussianRnd(mean, std) {
   return Math.round((sum) * std) + mean;
 }
 
-export function asyncEach(arr, callback, onDone = ()=> {}) {
-  let count = 0;
-  const adv = ()=> {
-    if (count === arr.length) {
-      return onDone();
-    }
-    const idx = count;
-    count++;
-    callback(arr[idx], adv, idx);
-  };
-  adv();
-}
-
-export function eachRndTimeout(arr, callback, onDone, rndFn) {
-  asyncEach(arr, (el, adv, idx)=> {
-    callback(el, ()=> {
-      setTimeout(adv, rndFn(el, idx));
-    });
-  }, onDone);
+export function eachPromise(arr, iterator) {
+  const {length} = arr;
+  return Array.from(arr).reduce((prev, current, idx) =>
+    prev.then(() =>
+      Promise.resolve(current)
+      .then((val) => iterator(val, idx, length))
+    )
+  , Promise.resolve());
 }
 
 export function exclude(obj, keys) {

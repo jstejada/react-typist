@@ -28,12 +28,11 @@ export default class Typist extends Component {
 
   constructor(props) {
     super(props);
-    if (this.props.children) {
-      this.toType = utils.extractText(this.props.children);
+    this.mounted = false;
+    this.linesToType = [];
 
-      if (this.props.startDelay > 0 && typeof window !== 'undefined') {
-        this.typeAll = setTimeout.bind(window, this.typeAll.bind(this), this.props.startDelay);
-      }
+    if (props.children) {
+      this.linesToType = utils.extractText(props.children);
     }
   }
 
@@ -44,8 +43,13 @@ export default class Typist extends Component {
 
   componentDidMount() {
     this.mounted = true;
-    if (this.props.children) {
-      this.typeAll();
+    const {children, startDelay} = this.props;
+    if (children) {
+      if (startDelay > 0 && typeof window !== 'undefined') {
+        setTimeout(this.typeAllLines.bind(this), startDelay);
+      } else {
+        this.typeAllLines();
+      }
     } else {
       this.onTypingDone();
     }
@@ -64,12 +68,12 @@ export default class Typist extends Component {
     this.mounted = false;
   }
 
-  onTypingDone = ()=> {
+  onTypingDone = () => {
     this.setState({isDone: true});
     this.props.onTypingDone();
   }
 
-  delayGenerator = (line, lineIdx, character, charIdx)=> {
+  delayGenerator = (line, lineIdx, character, charIdx) => {
     const mean = this.props.avgTypingDelay;
     const std = this.props.stdTypingDelay;
     return this.props.delayGenerator(
@@ -80,42 +84,46 @@ export default class Typist extends Component {
         lineIdx,
         character,
         charIdx,
-        defDelayGenerator: (mn = mean, st = std)=> utils.gaussianRnd(mn, st),
+        defDelayGenerator: (mn = mean, st = std) => utils.gaussianRnd(mn, st),
       }
     );
   }
 
-  typeAll(strs = this.toType) {
-    utils.asyncEach(strs, (line, adv, idx)=> {
-      if (this.mounted === true) {
+  typeAllLines(lines = this.linesToType) {
+    return utils.eachPromise(lines, (line, idx) => {
+      if (!this.mounted) { return Promise.resolve(); }
+      return new Promise((resolve) => {
         this.setState({text: this.state.text.concat([''])}, ()=> {
-          this.typeStr(line, idx, adv);
+          this.typeLine(line, idx).then(resolve);
         });
-      }
-    }, this.onTypingDone);
+      });
+    })
+    .then(() => this.onTypingDone());
   }
 
-  typeStr(line, idx, onDone = ()=>{}) {
-    utils.eachRndTimeout(
-      line,
-      (ch, adv)=> {
+  typeLine(line, lineIdx) {
+    return utils.eachPromise(line, (character, charIdx) => {
+      if (!this.mounted) { return Promise.resolve(); }
+      return new Promise((resolve) => {
         const text = this.state.text.slice();
-        text[idx] += ch;
-        this.setState({text}, adv);
-      },
-      onDone,
-      this.delayGenerator.bind(this, line, idx)
-    );
+        text[lineIdx] += character;
+        this.setState({text}, () => {
+          const delay = this.delayGenerator(line, lineIdx, character, charIdx);
+          setTimeout(resolve, delay);
+        });
+      });
+    });
   }
 
   render() {
-    const className = this.props.className;
+    const {className, cursor} = this.props;
+    const {isDone} = this.state;
     const innerTree = utils.extractTreeWithText(this.props.children, this.state.text);
 
     return (
       <div className={`Typist ${className}`}>
         {innerTree}
-        <Cursor isDone={this.state.isDone} {...this.props.cursor} />
+        <Cursor isDone={isDone} {...cursor} />
       </div>
     );
   }

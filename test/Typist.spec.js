@@ -1,6 +1,7 @@
 import React from 'react';
 import TestUtils from 'react-addons-test-utils';
 import {findDOMNode} from 'react-dom';
+import PromiseMock from 'promise-mock';
 import Typist from 'Typist';
 
 
@@ -9,11 +10,27 @@ describe('Typist', ()=> {
   beforeEach(()=> {
     props = {delayGenerator: ()=> 100}; // Delay between keystrokes always 100
     jasmine.clock().install();
+    PromiseMock.install();
   });
 
   afterEach(()=> {
+    PromiseMock.uninstall();
     jasmine.clock().uninstall();
   });
+
+  const typeAll = (limit) => {
+    let i = 0;
+    const canType = () => (
+      limit != null ?
+        Promise.waiting.length > 0 && i < limit :
+        Promise.waiting.length > 0
+    );
+    while (canType()) {
+      Promise.runAll();
+      jasmine.clock().tick(100);
+      i++;
+    }
+  };
 
   describe('#render', ()=> {
     describe('when no children passed', ()=> {
@@ -30,14 +47,20 @@ describe('Typist', ()=> {
     });
 
     describe('when children passed', ()=> {
-      const assertAnimation = (inst, strs)=> {
+      const assertLine = (inst, line, acum = '') => {
+        for (let idx = 1; idx <= line.length; idx++) {
+          expect(findDOMNode(inst).textContent).toEqual(`${acum}${line.slice(0, idx)}|`);
+          jasmine.clock().tick(100);
+          Promise.runAll();
+        }
+      };
+
+      const assertLines = (inst, lines)=> {
         let acum = '';
-        for (const str of strs) {
-          for (let idx = 1; idx <= str.length; idx++) {
-            expect(findDOMNode(inst).textContent).toEqual(`${acum}${str.slice(0, idx)}|`);
-            jasmine.clock().tick(100);
-          }
-          acum += str;
+        Promise.runAll();
+        for (const line of lines) {
+          assertLine(inst, line, acum);
+          acum += line;
         }
       };
 
@@ -45,17 +68,15 @@ describe('Typist', ()=> {
         const str = 'Test';
         const inst = TestUtils.renderIntoDocument(<Typist {...props}>{str}</Typist>);
 
-        for (let idx = 1; idx <= str.length; idx++) {
-          expect(findDOMNode(inst).textContent).toEqual(`${str.slice(0, idx)}|`);
-          jasmine.clock().tick(100);
-        }
+        Promise.runAll();
+        assertLine(inst, str);
       });
 
       it('animates strings in correct order', ()=> {
         const strs = ['Test1', 'Test2'];
         const inst = TestUtils.renderIntoDocument( <Typist {...props}>{strs}</Typist>);
 
-        assertAnimation(inst, strs);
+        assertLines(inst, strs);
       });
 
       it('animates elements in correct order', ()=> {
@@ -63,7 +84,7 @@ describe('Typist', ()=> {
         const els = [<div key="t1">T1</div>, <div key="t2"><span>T2</span></div>];
         const inst = TestUtils.renderIntoDocument( <Typist {...props}>{els}</Typist>);
 
-        assertAnimation(inst, strs);
+        assertLines(inst, strs);
       });
 
       it('animates strings and elements', ()=> {
@@ -75,7 +96,7 @@ describe('Typist', ()=> {
           </Typist>
         );
 
-        assertAnimation(inst, strs);
+        assertLines(inst, strs);
         expect(findDOMNode(inst).childNodes[1].tagName).toEqual('SPAN');
       });
 
@@ -91,7 +112,7 @@ describe('Typist', ()=> {
           </Typist>
         );
 
-        assertAnimation(inst, strs);
+        assertLines(inst, strs);
         expect(findDOMNode(inst).childNodes[0].tagName).toEqual('SPAN');
         expect(findDOMNode(inst).childNodes[1].tagName).toEqual('DIV');
       });
@@ -107,7 +128,7 @@ describe('Typist', ()=> {
           </Typist>
         );
 
-        assertAnimation(inst, strs);
+        assertLines(inst, strs);
         expect(findDOMNode(inst).childNodes[2].tagName).toEqual('BR');
       });
 
@@ -119,7 +140,7 @@ describe('Typist', ()=> {
             <br />
           </Typist>
         );
-        jasmine.clock().tick(1100);
+        typeAll();
         expect(findDOMNode(inst).childNodes[1].className).toEqual('mysp');
       });
 
@@ -132,7 +153,7 @@ describe('Typist', ()=> {
             <br />
           </Typist>
         );
-        jasmine.clock().tick(1100);
+        typeAll();
         expect(spy).toHaveBeenCalled();
       });
     });
@@ -142,20 +163,20 @@ describe('Typist', ()=> {
     it('hides the cursor when specified', ()=> {
       props.cursor = {show: false};
       const inst = TestUtils.renderIntoDocument(<Typist {...props}>Test</Typist>);
-      jasmine.clock().tick(500);
+      typeAll();
       expect(findDOMNode(inst).textContent).toEqual('Test');
     });
 
     it('applies blink class when specified', ()=> {
       const inst = TestUtils.renderIntoDocument(<Typist {...props}>Test</Typist>);
-      jasmine.clock().tick(500);
+      typeAll();
       TestUtils.findRenderedDOMComponentWithClass(inst, 'Cursor--blinking');
     });
 
     it('does not apply blink class when specified', ()=> {
       props.cursor = {blink: false};
       const inst = TestUtils.renderIntoDocument(<Typist {...props}>Test</Typist>);
-      jasmine.clock().tick(500);
+      typeAll();
       const res = TestUtils.scryRenderedDOMComponentsWithClass(inst, 'Cursor--blinking');
       expect(res.length).toEqual(0);
     });
@@ -163,17 +184,17 @@ describe('Typist', ()=> {
     it('displays correct cursor character', ()=> {
       props.cursor = {element: '▍'};
       const inst = TestUtils.renderIntoDocument(<Typist {...props}>Test</Typist>);
-      jasmine.clock().tick(500);
+      typeAll();
       expect(findDOMNode(inst).textContent).toEqual('Test▍');
     });
 
     it('hides cursor and end of animation when specified', ()=> {
       props.cursor = {hideWhenDone: true, hideWhenDoneDelay: 100};
       const inst = TestUtils.renderIntoDocument(<Typist {...props}>Test</Typist>);
-      jasmine.clock().tick(400);
+      typeAll(4);
       let res = TestUtils.scryRenderedDOMComponentsWithClass(inst, 'Cursor');
       expect(res.length).toEqual(1);
-      jasmine.clock().tick(100);
+      typeAll(1);
       res = TestUtils.scryRenderedDOMComponentsWithClass(inst, 'Cursor');
       expect(res.length).toEqual(0);
     });
@@ -185,8 +206,10 @@ describe('Typist', ()=> {
       const inst = TestUtils.renderIntoDocument(<Typist {...props}>Test</Typist>);
       expect(findDOMNode(inst).textContent).toEqual('|');
       jasmine.clock().tick(500);
+      Promise.runAll();
       expect(findDOMNode(inst).textContent).toEqual('T|');
-      jasmine.clock().tick(400);
+      jasmine.clock().tick(100);
+      typeAll();
       expect(findDOMNode(inst).textContent).toEqual('Test|');
     });
   });
@@ -196,7 +219,7 @@ describe('Typist', ()=> {
       const spy = jasmine.createSpy('delayGenerator').and.returnValue(100);
       props = {avgTypingDelay: 500, stdTypingDelay: 100, delayGenerator: spy};
       TestUtils.renderIntoDocument(<Typist {...props}>Te</Typist>);
-      jasmine.clock().tick(100);
+      typeAll();
       expect(spy.calls.argsFor(0).slice(0, 2)).toEqual([500, 100]);
       expect(spy.calls.argsFor(1).slice(0, 2)).toEqual([500, 100]);
     });
@@ -205,7 +228,7 @@ describe('Typist', ()=> {
       const spy = jasmine.createSpy('delayGenerator').and.returnValue(100);
       props = {delayGenerator: spy};
       TestUtils.renderIntoDocument(<Typist {...props}>{['Te', 'st']}</Typist>);
-      jasmine.clock().tick(300);
+      typeAll();
       for (const idx of [0, 1]) {
         const obj = spy.calls.argsFor(idx).slice(2)[0];
         expect(obj.line).toEqual('Te');
