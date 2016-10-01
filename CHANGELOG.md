@@ -3,7 +3,7 @@
 ### v1.0.1 (10/01/16)
 
 - Fixes
-  + Move `promise-mock` as a `devDepencency`
+  + Move `promise-mock` to `devDependencies`
 
 
 ### v1.0.0 (10/01/16)
@@ -13,10 +13,12 @@ major version of React, we decided to  make this release opt-in, in case
 unexpected errors occur.
 
 - Fixes:
-  + Can now render server-side
+  + Can now use server rendering
   + Component no longer sets state after being unmounted
 
 - Development:
+  + Upgrade to React 15
+  + Upgrade to Babel 6, and other tooling upgrades
   + Switch to promises to make code more concise and readable
 
 
