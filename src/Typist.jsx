@@ -69,6 +69,7 @@ export default class Typist extends Component {
   }
 
   onTypingDone = () => {
+    if (!this.mounted) { return; }
     this.setState({ isDone: true });
     this.props.onTypingDone();
   }
