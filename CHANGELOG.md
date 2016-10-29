@@ -1,5 +1,12 @@
 # React Typist Changelog
 
+
+### v1.0.3 (10/01/16)
+
+- Fixes
+  + Component no longer sets `isDone` state if unmounted
+
+
 ### v1.0.1 (10/01/16)
 
 - Fixes

@@ -100,6 +100,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 
 	    _this.onTypingDone = function () {
+	      if (!_this.mounted) {
+	        return;
+	      }
 	      _this.setState({ isDone: true });
 	      _this.props.onTypingDone();
 	    };

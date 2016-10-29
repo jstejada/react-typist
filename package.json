@@ -1,6 +1,6 @@
 {
   "name": "react-typist",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Typing animations with React",
   "main": "dist/Typist.js",
   "scripts": {
