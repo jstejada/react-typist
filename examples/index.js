@@ -8,16 +8,17 @@ class TypistExample extends React.Component {
 
   state = {
     renderMsg: false,
-    headerDrection: 1,
-    msgDrection: 1,
+    headerDirection: 1,
+    msgDirection: 1,
   }
 
   onHeaderTyped = () => {
     setTimeout(() => this.setState({ renderMsg: true,
-                    headerDrection: -this.state.headerDrection }), 1000);
+                                                    headerDirection: -this.state.headerDirection,
+                                                  }), 1000);
   }
   onMessageTyped = () => {
-    setTimeout(() => this.setState({ msgDrection: -this.state.msgDrection }), 1000);
+    setTimeout(() => this.setState({ msgDirection: -this.state.msgDirection }), 1000);
   }
 
   delayGen(mean, std, { line, lineIdx, charIdx, defDelayGenerator }) {
@@ -42,7 +43,7 @@ class TypistExample extends React.Component {
           avgTypingSpeed={40}
           startDelay={2000}
           onTypingDone={this.onHeaderTyped}
-          direction={this.state.headerDrection}
+          direction={this.state.headerDirection}
         >
           <a href={docs}>React Typist</a>
         </Typist>
@@ -53,7 +54,7 @@ class TypistExample extends React.Component {
               delayGenerator={this.delayGen}
               cursor={{ hideWhenDone: true }}
               onTypingDone={this.onMessageTyped}
-              direction={this.state.msgDrection}
+              direction={this.state.msgDirection}
             >
               * Easy to style
               <br />
