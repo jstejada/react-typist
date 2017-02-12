@@ -81,16 +81,6 @@ export default class Typist extends Component {
   componentWillUnmount() {
     this.mounted = false;
   }
-componentWillReceiveProps(nextProps) {
-  if(this.props.direction != nextProps.direction && this.state.isDone != true){
-      this.mounted = false;
-      this.linesToType = [];
-      this.setState({text:[],isDone: true},()=>{
-        this.mounted = true;
-        this.typeAllLines();
-      });
-  }
-}
   onTypingDone = () => {
     if (!this.mounted) { return; }
     this.setState({ isDone: true });
@@ -138,19 +128,22 @@ componentWillReceiveProps(nextProps) {
       });
     });
   }
-  removeAllLines(lines = this.state.text) {
+  removeAllLines() {
+    let lines = this.state.text;
     if (lines.length > 1) {
-      lines = lines.slice(0, lines.length - 1)
-      this.setState({ isDone: false, text:  lines});
+      lines = lines.slice(0, lines.length - 1);
+      this.setState({ isDone: false,
+                            text: lines,
+                          });
     } else {
-        this.setState({ isDone: false });
+      this.setState({ isDone: false });
     }
     return utils.eachPromiseRemove(lines, (line, idx) => {
       if (!this.mounted) { return Promise.resolve(); }
       return new Promise((resolve) => {
         this.setState({ flag: !this.state.flag }, () => {
           this.removeLine(line, idx).then(() => {
-            this.setState({ text:  this.state.text.slice(0,this.state.text.length -1) });
+            this.setState({ text: this.state.text.slice(0, this.state.text.length - 1) });
             resolve();
           });
         });
