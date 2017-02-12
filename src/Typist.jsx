@@ -59,7 +59,7 @@ export default class Typist extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    if (this.props.direction !== nextProps.direction) {
+    if (this.props.direction !== nextProps.direction && nextState.isDone) {
       return true;
     }
     for (let idx = 0; idx < nextState.text.length; idx++) {
@@ -70,11 +70,11 @@ export default class Typist extends Component {
     return this.state.isDone !== nextState.isDone;
   }
   componentDidUpdate(prevProps) {
-    if (this.props.direction !== prevProps.direction) {
+    if (this.props.direction !== prevProps.direction && this.state.isDone) {
       if (this.props.direction === 1) {
-        this.typeAllLines();
+        this.typeAllLines.bind(this);
       } else if (this.props.direction === -1) {
-        this.removeAllLines();
+        this.removeAllLines.bind(this);
       }
     }
   }
@@ -104,6 +104,7 @@ export default class Typist extends Component {
   }
 
   typeAllLines(lines = this.linesToType) {
+    this.setState({ isDone: false, text: [] });
     return utils.eachPromise(lines, (line, idx) => {
       if (!this.mounted) { return Promise.resolve(); }
       return new Promise((resolve) => {
@@ -132,9 +133,9 @@ export default class Typist extends Component {
     let lines = this.state.text;
     if (lines.length > 1) {
       lines = lines.slice(0, lines.length - 1);
-      this.setState({ isDone: false,
-                            text: lines,
-                          });
+      this.setState({ text: lines,
+                            isDone: false,
+                         });
     } else {
       this.setState({ isDone: false });
     }
