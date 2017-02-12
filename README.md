@@ -189,9 +189,12 @@ function(mean, std, {line, lineIdx, charIdx, defDelayGenerator}) {
 #### direction
 *Default*: `1`
 
-Direction prop decides whether to type direction
+Direction prop decides whether to type  or perfrom backspace
+
 `1`: means it will type forward
+
 `-1`:  means it will perform backspace.
+
 *Note*  Do not change direction and content outside [`onTypingDone`](#onTypingDone) method, if you re performing the backspace animation
 
 ## Development
