@@ -190,7 +190,7 @@ describe('Typist', () => {
       expect(findDOMNode(inst).textContent).toEqual('Test▍');
     });
 
-    it('hides cursor and end of animation when specified', () => {
+    it('hides cursor at end of animation when specified', () => {
       props.cursor = { hideWhenDone: true, hideWhenDoneDelay: 100 };
       const inst = TestUtils.renderIntoDocument(<Typist {...props}>Test</Typist>);
       typeAll(4);

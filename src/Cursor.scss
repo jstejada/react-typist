@@ -1,5 +1,7 @@
 
 .Typist .Cursor {
+  display: inline-block;
+
   &--blinking {
     opacity: 1;
     animation: blink 1s linear infinite;
