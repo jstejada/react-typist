@@ -21,6 +21,15 @@ export function eachPromise(arr, iterator) {
     )
   , Promise.resolve());
 }
+export function eachPromiseRemove(arr, iterator) {
+  const { length } = arr;
+  return Array.from(arr).reduceRight((prev, current, idx) =>
+    prev.then(() =>
+      Promise.resolve(current)
+      .then((val) => iterator(val, idx, length))
+    )
+  , Promise.resolve());
+}
 
 export function exclude(obj, keys) {
   const res = {};

@@ -14,6 +14,7 @@ export default class Typist extends Component {
     cursor: PropTypes.object,
     onTypingDone: PropTypes.func,
     delayGenerator: PropTypes.func,
+    direction: PropTypes.number,
   }
 
   static defaultProps = {
@@ -24,6 +25,7 @@ export default class Typist extends Component {
     cursor: {},
     onTypingDone: () => {},
     delayGenerator: utils.gaussianRnd,
+    direction: 1,
   }
 
   constructor(props) {
@@ -39,6 +41,7 @@ export default class Typist extends Component {
   state = {
     text: [],
     isDone: false,
+    flag: true,
   }
 
   componentDidMount() {
@@ -56,6 +59,9 @@ export default class Typist extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
+    if (this.props.direction !== nextProps.direction && nextState.isDone) {
+      return true;
+    }
     for (let idx = 0; idx < nextState.text.length; idx++) {
       const txt = this.state.text[idx];
       const ntxt = nextState.text[idx];
@@ -63,11 +69,18 @@ export default class Typist extends Component {
     }
     return this.state.isDone !== nextState.isDone;
   }
-
+  componentDidUpdate(prevProps) {
+    if (this.props.direction !== prevProps.direction && this.state.isDone) {
+      if (this.props.direction === 1) {
+        this.typeAllLines.bind(this);
+      } else if (this.props.direction === -1) {
+        this.removeAllLines.bind(this);
+      }
+    }
+  }
   componentWillUnmount() {
     this.mounted = false;
   }
-
   onTypingDone = () => {
     if (!this.mounted) { return; }
     this.setState({ isDone: true });
@@ -91,6 +104,7 @@ export default class Typist extends Component {
   }
 
   typeAllLines(lines = this.linesToType) {
+    this.setState({ isDone: false, text: [] });
     return utils.eachPromise(lines, (line, idx) => {
       if (!this.mounted) { return Promise.resolve(); }
       return new Promise((resolve) => {
@@ -110,6 +124,45 @@ export default class Typist extends Component {
         text[lineIdx] += character;
         this.setState({ text }, () => {
           const delay = this.delayGenerator(line, lineIdx, character, charIdx);
+          setTimeout(resolve, delay);
+        });
+      });
+    });
+  }
+  removeAllLines() {
+    let lines = this.state.text;
+    if (lines.length > 1) {
+      lines = lines.slice(0, lines.length - 1);
+      this.setState({ text: lines,
+                            isDone: false,
+                         });
+    } else {
+      this.setState({ isDone: false });
+    }
+    return utils.eachPromiseRemove(lines, (line, idx) => {
+      if (!this.mounted) { return Promise.resolve(); }
+      return new Promise((resolve) => {
+        this.setState({ flag: !this.state.flag }, () => {
+          this.removeLine(line, idx).then(() => {
+            this.setState({ text: this.state.text.slice(0, this.state.text.length - 1) });
+            resolve();
+          });
+        });
+      });
+    })
+    .then(() => this.onTypingDone());
+  }
+
+  removeLine(line, lineIdx) {
+    return utils.eachPromise(line, (character, charIdx) => {
+      if (!this.mounted) { return Promise.resolve(); }
+      return new Promise((resolve) => {
+        const text = this.state.text.slice();
+        if (text.length > lineIdx && text[lineIdx].length) {
+          text[lineIdx] = text[lineIdx].slice(0, text[lineIdx].length - 1);
+        }
+        this.setState({ text }, () => {
+          const delay = this.delayGenerator(line, lineIdx - 1, character, charIdx);
           setTimeout(resolve, delay);
         });
       });

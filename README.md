@@ -81,6 +81,7 @@ Refer to [`examples/`](/examples) for more examples.
 * [`cursor`](#cursor)
 * [`onTypingDone`](#onTypingDone)
 * [`delayGenerator`](#delayGenerator)
+* [`direction`](#direction)
 
 <a name="className"></a>
 #### className
@@ -184,6 +185,17 @@ function(mean, std, {line, lineIdx, charIdx, defDelayGenerator}) {
   return defDelayGenerator();
 }
 ```
+<a name="direction"></a>
+#### direction
+*Default*: `1`
+
+Direction prop decides whether to type  or perfrom backspace
+
+`1`: means it will type forward
+
+`-1`:  means it will perform backspace.
+
+*Note*  Do not change direction and content outside [`onTypingDone`](#onTypingDone) method, if you re performing the backspace animation
 
 ## Development
 
