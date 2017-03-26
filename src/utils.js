@@ -12,14 +12,11 @@ export function gaussianRnd(mean, std) {
   return Math.round((sum) * std) + mean;
 }
 
-export function eachPromise(arr, iterator) {
-  const { length } = arr;
-  return Array.from(arr).reduce((prev, current, idx) =>
-    prev.then(() =>
-      Promise.resolve(current)
-      .then((val) => iterator(val, idx, length))
-    )
-  , Promise.resolve());
+export function eachPromise(arr, iterator, ...extraArgs) {
+  const promiseReducer = (prev, current, idx) => (
+    prev.then(() => iterator(current, idx, ...extraArgs))
+  );
+  return Array.from(arr).reduce(promiseReducer, Promise.resolve());
 }
 
 export function exclude(obj, keys) {

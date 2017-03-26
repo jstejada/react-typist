@@ -79,6 +79,8 @@ Refer to [`examples/`](/examples) for more examples.
 * [`stdTypingDelay`](#stdTypingDelay)
 * [`startDelay`](#startDelay)
 * [`cursor`](#cursor)
+* [`onCharacterTyped`](#onCharacterTyped)
+* [`onLineTyped`](#onLineTyped)
 * [`onTypingDone`](#onTypingDone)
 * [`delayGenerator`](#delayGenerator)
 
@@ -141,6 +143,26 @@ include the [css](#cssBlink)
 animation is complete.
 * `hideWhenDoneDelay (int)`: delay in ms to be applied before hiding cursor when
 typing animation is complete.
+
+<a name="onCharacterTyped"></a>
+#### onCharacterTyped
+Function to be called every time a character is typed on the screen.
+
+```js
+function(character, charIdx) {
+  ...
+}
+```
+
+<a name="onLineTyped"></a>
+#### onLineTyped
+Function to be called every time a line is typed on the screen.
+
+```js
+function(line, lineIdx) {
+  ...
+}
+```
 
 <a name="onTypingDone"></a>
 #### onTypingDone

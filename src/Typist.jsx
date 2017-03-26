@@ -12,6 +12,8 @@ export default class Typist extends Component {
     stdTypingDelay: PropTypes.number,
     startDelay: PropTypes.number,
     cursor: PropTypes.object,
+    onCharacterTyped: PropTypes.func,
+    onLineTyped: PropTypes.func,
     onTypingDone: PropTypes.func,
     delayGenerator: PropTypes.func,
   }
@@ -22,6 +24,8 @@ export default class Typist extends Component {
     stdTypingDelay: 25,
     startDelay: 0,
     cursor: {},
+    onCharacterTyped: () => {},
+    onLineTyped: () => {},
     onTypingDone: () => {},
     delayGenerator: utils.gaussianRnd,
   }
@@ -91,27 +95,35 @@ export default class Typist extends Component {
   }
 
   typeAllLines(lines = this.linesToType) {
-    return utils.eachPromise(lines, (line, idx) => {
-      if (!this.mounted) { return Promise.resolve(); }
-      return new Promise((resolve) => {
-        this.setState({ text: this.state.text.concat(['']) }, () => {
-          this.typeLine(line, idx).then(resolve);
-        });
-      });
-    })
+    return utils.eachPromise(lines, this.typeLine)
     .then(() => this.onTypingDone());
   }
 
-  typeLine(line, lineIdx) {
-    return utils.eachPromise(line, (character, charIdx) => {
-      if (!this.mounted) { return Promise.resolve(); }
-      return new Promise((resolve) => {
-        const text = this.state.text.slice();
-        text[lineIdx] += character;
-        this.setState({ text }, () => {
-          const delay = this.delayGenerator(line, lineIdx, character, charIdx);
-          setTimeout(resolve, delay);
-        });
+  typeLine = (line, lineIdx) => {
+    if (!this.mounted) { return Promise.resolve(); }
+    const { onLineTyped } = this.props;
+
+    return new Promise((resolve, reject) => {
+      this.setState({ text: this.state.text.concat(['']) }, () => {
+        utils.eachPromise(line, this.typeCharacter, line, lineIdx)
+        .then(() => onLineTyped(line, lineIdx))
+        .then(resolve)
+        .catch(reject);
+      });
+    });
+  }
+
+  typeCharacter = (character, charIdx, line, lineIdx) => {
+    if (!this.mounted) { return Promise.resolve(); }
+    const { onCharacterTyped } = this.props;
+
+    return new Promise((resolve) => {
+      const text = this.state.text.slice();
+      text[lineIdx] += character;
+      this.setState({ text }, () => {
+        onCharacterTyped(character, charIdx);
+        const delay = this.delayGenerator(line, lineIdx, character, charIdx);
+        setTimeout(resolve, delay);
       });
     });
   }
