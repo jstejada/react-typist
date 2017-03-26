@@ -114,6 +114,40 @@ module.exports =
 	      });
 	    };
 
+	    _this.typeLine = function (line, lineIdx) {
+	      if (!_this.mounted) {
+	        return Promise.resolve();
+	      }
+	      var onLineTyped = _this.props.onLineTyped;
+
+
+	      return new Promise(function (resolve, reject) {
+	        _this.setState({ text: _this.state.text.concat(['']) }, function () {
+	          utils.eachPromise(line, _this.typeCharacter, line, lineIdx).then(function () {
+	            return onLineTyped(line, lineIdx);
+	          }).then(resolve).catch(reject);
+	        });
+	      });
+	    };
+
+	    _this.typeCharacter = function (character, charIdx, line, lineIdx) {
+	      if (!_this.mounted) {
+	        return Promise.resolve();
+	      }
+	      var onCharacterTyped = _this.props.onCharacterTyped;
+
+
+	      return new Promise(function (resolve) {
+	        var text = _this.state.text.slice();
+	        text[lineIdx] += character;
+	        _this.setState({ text: text }, function () {
+	          onCharacterTyped(character, charIdx);
+	          var delay = _this.delayGenerator(line, lineIdx, character, charIdx);
+	          setTimeout(resolve, delay);
+	        });
+	      });
+	    };
+
 	    _this.mounted = false;
 	    _this.linesToType = [];
 
@@ -163,36 +197,8 @@ module.exports =
 
 	      var lines = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.linesToType;
 
-	      return utils.eachPromise(lines, function (line, idx) {
-	        if (!_this2.mounted) {
-	          return Promise.resolve();
-	        }
-	        return new Promise(function (resolve) {
-	          _this2.setState({ text: _this2.state.text.concat(['']) }, function () {
-	            _this2.typeLine(line, idx).then(resolve);
-	          });
-	        });
-	      }).then(function () {
+	      return utils.eachPromise(lines, this.typeLine).then(function () {
 	        return _this2.onTypingDone();
-	      });
-	    }
-	  }, {
-	    key: 'typeLine',
-	    value: function typeLine(line, lineIdx) {
-	      var _this3 = this;
-
-	      return utils.eachPromise(line, function (character, charIdx) {
-	        if (!_this3.mounted) {
-	          return Promise.resolve();
-	        }
-	        return new Promise(function (resolve) {
-	          var text = _this3.state.text.slice();
-	          text[lineIdx] += character;
-	          _this3.setState({ text: text }, function () {
-	            var delay = _this3.delayGenerator(line, lineIdx, character, charIdx);
-	            setTimeout(resolve, delay);
-	          });
-	        });
 	      });
 	    }
 	  }, {
@@ -224,6 +230,8 @@ module.exports =
 	  stdTypingDelay: _react.PropTypes.number,
 	  startDelay: _react.PropTypes.number,
 	  cursor: _react.PropTypes.object,
+	  onCharacterTyped: _react.PropTypes.func,
+	  onLineTyped: _react.PropTypes.func,
 	  onTypingDone: _react.PropTypes.func,
 	  delayGenerator: _react.PropTypes.func
 	};
@@ -233,6 +241,8 @@ module.exports =
 	  stdTypingDelay: 25,
 	  startDelay: 0,
 	  cursor: {},
+	  onCharacterTyped: function onCharacterTyped() {},
+	  onLineTyped: function onLineTyped() {},
 	  onTypingDone: function onTypingDone() {},
 	  delayGenerator: utils.gaussianRnd
 	};
@@ -273,20 +283,16 @@ module.exports =
 	var Cursor = function (_Component) {
 	  _inherits(Cursor, _Component);
 
-	  function Cursor() {
-	    var _ref;
-
-	    var _temp, _this, _ret;
-
+	  function Cursor(props) {
 	    _classCallCheck(this, Cursor);
 
-	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-	      args[_key] = arguments[_key];
-	    }
+	    var _this = _possibleConstructorReturn(this, (Cursor.__proto__ || Object.getPrototypeOf(Cursor)).call(this, props));
 
-	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Cursor.__proto__ || Object.getPrototypeOf(Cursor)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
+	    _this._isReRenderingCursor = false;
+	    _this.state = {
 	      shouldRender: _this.props.show
-	    }, _temp), _possibleConstructorReturn(_this, _ret);
+	    };
+	    return _this;
 	  }
 
 	  _createClass(Cursor, [{
@@ -300,6 +306,49 @@ module.exports =
 	          return _this2.setState({ shouldRender: false });
 	        }, this.props.hideWhenDoneDelay);
 	      }
+	    }
+	  }, {
+	    key: 'componentDidUpdate',
+	    value: function componentDidUpdate() {
+	      var _props = this.props;
+	      var show = _props.show;
+	      var isDone = _props.isDone;
+
+	      if (!show) {
+	        return;
+	      }
+	      if (isDone) {
+	        return;
+	      }
+	      if (this._isReRenderingCursor) {
+	        return;
+	      }
+
+	      // In webkit and blink, rendering the cursor alongside the text as it
+	      // animates sometimes causes the text to stop rendering when it reaches
+	      // a new line break, even though the underlying DOM /does/ contain
+	      // the text. This seems to happen when the space available for the text is
+	      // at a specific width that makes it so the line break happens within a
+	      // word.
+	      // Using dev tools, when in this state, if you modify the dom or any style,
+	      // it immediately renders all of the text in its correct position.
+	      // Given that observation, this is a hackish solutions that re-renders the
+	      // cursor every time a character is rendered, just to ensure that the text
+	      // is rendered correctly.
+	      // See #13 and #15 for more details
+	      this._reRenderCursor();
+	    }
+	  }, {
+	    key: '_reRenderCursor',
+	    value: function _reRenderCursor() {
+	      var _this3 = this;
+
+	      this._isReRenderingCursor = true;
+	      this.setState({ shouldRender: false }, function () {
+	        _this3.setState({ shouldRender: true }, function () {
+	          _this3._isReRenderingCursor = false;
+	        });
+	      });
 	    }
 	  }, {
 	    key: 'render',
@@ -388,15 +437,16 @@ module.exports =
 	}
 
 	function eachPromise(arr, iterator) {
-	  var length = arr.length;
+	  for (var _len = arguments.length, extraArgs = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+	    extraArgs[_key - 2] = arguments[_key];
+	  }
 
-	  return Array.from(arr).reduce(function (prev, current, idx) {
+	  var promiseReducer = function promiseReducer(prev, current, idx) {
 	    return prev.then(function () {
-	      return Promise.resolve(current).then(function (val) {
-	        return iterator(val, idx, length);
-	      });
+	      return iterator.apply(undefined, [current, idx].concat(extraArgs));
 	    });
-	  }, Promise.resolve());
+	  };
+	  return Array.from(arr).reduce(promiseReducer, Promise.resolve());
 	}
 
 	function exclude(obj, keys) {
@@ -465,8 +515,8 @@ module.exports =
 	}
 
 	function extractTreeWithText() {
-	  for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-	    args[_key] = arguments[_key];
+	  for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+	    args[_key2] = arguments[_key2];
 	  }
 
 	  if (!args[0]) return void 0;

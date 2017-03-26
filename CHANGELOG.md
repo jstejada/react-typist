@@ -1,6 +1,18 @@
 # React Typist Changelog
 
 
+### v1.1.0 (03/26/17)
+
+- Features:
+  + Add new options: `onCharacterTyped` and `onLineTyped` (#22)
+
+- Fixes
+  + Fix text rendering issue in webkit/blink under certain widths (#13)
+
+- Development:
+  + Remove bower package
+
+
 ### v1.0.3 (10/29/16)
 
 - Fixes
