@@ -9,12 +9,6 @@ configurable.
 npm install react-typist --save
 ```
 
-or
-
-```shell
-bower install react-typist --save
-```
-
 
 ## Live Example
 * <a href="//jstejada.github.io/react-typist" target="_blank">Basic example</a>
