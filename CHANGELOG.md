@@ -1,5 +1,9 @@
 # React Typist Changelog
 
+### v1.1.1 (04/10/17)
+
+- Fixes
+  + Fixed unsupported `Arrays.from()` in IE11 by adding babel-polyfill.
 
 ### v1.1.0 (03/26/17)
 

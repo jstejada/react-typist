@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import Cursor from './Cursor';
 import * as utils from './utils';
+import 'babel-polyfill';
 
 
 export default class Typist extends Component {

@@ -9,7 +9,7 @@ const sassLoaders = [
 ];
 
 module.exports = {
-  entry: './examples/index.js',
+  entry: ['babel-polyfill', './examples/index.js'],
   output: {
     path: path.join(__dirname, './examples/dist'),
     filename: 'index.js',
