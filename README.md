@@ -208,13 +208,21 @@ React Typist makes use of Array.from() which is not supported in IE.
 
 To resolve this, [babel-polyfill](https://babeljs.io/docs/usage/polyfill/) can be added to your project.
  
- `npm install --save babel-polyfill`
+ ```shell
+ npm install --save babel-polyfill
+ ```
  
 You can now include this module in your app at the entry point.
 
-ES6: `import 'babel-polyfill'`
+ES6: 
+```js
+import 'babel-polyfill'
+```
 
-CommonJS: `require('babel-polyfill')`
+CommonJS:
+```js
+require('babel-polyfill')
+```
 
 ## Development
 
