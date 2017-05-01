@@ -157,14 +157,14 @@ export default class Typist extends Component {
         }
       }
 
-      const delay = this.state.delay || this.delayGenerator(line, lineIdx, character, charIdx);
-      if (this.state.delay > 0) {
-        this.setState({ delay: 0 });
-      }
-      setTimeout(() => this.setState({ text }, () => {
+      this.setState({ text }, () => {
+        const delay = this.state.delay || this.delayGenerator(line, lineIdx, character, charIdx);
+        if (this.state.delay > 0) {
+          this.setState({ delay: 0 });
+        }
         onCharacterTyped(character, charIdx);
-        resolve();
-      }), delay);
+        setTimeout(resolve, delay);
+      });
     });
   }
 
