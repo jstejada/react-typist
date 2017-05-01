@@ -31,12 +31,6 @@ class TypistExample extends React.Component {
               className="TypistExample-message"
               cursor={{ hideWhenDone: true }}
             >
-              * Let's see if I can do a really cool thing
-              <Typist.Backspace count={15} />
-              a pretty cool thing
-              <Typist.Backspace count={15} />
-              an amazing thing
-              <Typist.Backspace count={13} />
               * Easy to style
               <Typist.Delay ms={1250} />
               <br />
