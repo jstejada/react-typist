@@ -110,7 +110,7 @@ export default class Typist extends Component {
 
     if (typeof line !== 'string') {
       if (line.type && line.type.name === 'Backspace') {
-        const char = line.props.line ? '🔙' : '🔚';
+        const char = line.props.line ? '🔚' : '🔙';
         if (line.props.delay > 0) {
           this.setState({ delay: this.state.delay + line.props.delay });
         }
