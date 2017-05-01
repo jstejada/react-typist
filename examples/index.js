@@ -3,28 +3,15 @@ import ReactDOM from 'react-dom';
 import Typist from 'Typist';
 import './main.scss';
 
-
 class TypistExample extends React.Component {
 
   state = {
     renderMsg: false,
+    typistRef: null,
   }
 
   onHeaderTyped = () => {
     this.setState({ renderMsg: true });
-  }
-
-  delayGen(mean, std, { line, lineIdx, charIdx, defDelayGenerator }) {
-    if (lineIdx === 0 && charIdx === line.length - 1) {
-      return 1250;
-    }
-    if (lineIdx === 1 && charIdx === line.length - 1) {
-      return 1250;
-    }
-    if (lineIdx === 3 && charIdx === line.length - 1) {
-      return 1250;
-    }
-    return defDelayGenerator(mean + 25);
   }
 
   render() {
@@ -33,8 +20,10 @@ class TypistExample extends React.Component {
       <div className="TypistExample">
         <Typist
           className="TypistExample-header"
-          avgTypingSpeed={40}
-          startDelay={2000}
+          avgTypingSpeed={10}
+          // avgTypingSpeed={40}
+          startDelay={0}
+          // startDelay={2000}
           onTypingDone={this.onHeaderTyped}
         >
           <a href={docs}>React Typist</a>
@@ -43,13 +32,18 @@ class TypistExample extends React.Component {
           {this.state.renderMsg ? (
             <Typist
               className="TypistExample-message"
-              delayGenerator={this.delayGen}
+              avgTypingSpeed={10}
+              startDelay={500}
               cursor={{ hideWhenDone: true }}
             >
               * Easy to style
+              <Typist.Delay ms={1250} />
               <br />
               * Easy to customize
+              <Typist.Delay ms={1250} />
               <br />
+              * Easy to use backspace
+              <Typist.Backspace count={23} delay={750} />
               <span>* <a href={docs} className="flash">docs</a></span>
               <br />
               {''}

@@ -37,9 +37,14 @@ export function extractText(toType) {
     const cur = st.pop();
 
     if (React.isValidElement(cur)) {
-      React.Children.forEach(cur.props.children, (child) => {
-        st.push(child);
-      });
+      const name = cur.type && cur.type.name;
+      if (name === 'Backspace' || name === 'Delay') {
+        lines.unshift(cur);
+      } else {
+        React.Children.forEach(cur.props.children, (child) => {
+          st.push(child);
+        });
+      }
     } else {
       if (Array.isArray(cur)) {
         for (const el of cur) {
@@ -77,7 +82,9 @@ export function extractTreeWithText(...args) {
     };
 
     // Recursively call on children of React Element
-    if (React.isValidElement(tree)) {
+    if (React.isValidElement(tree) &&
+      !(tree.type && (tree.type.name === 'Delay' || tree.type.name === 'Backspace'))
+    ) {
       const fact = factMaker(tree);
       const children = React.Children.map(tree.props.children, recurse) || [];
       return [fact(...children), idx];

@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Cursor from './Cursor';
+import Backspace from './Backspace';
+import Delay from './Delay';
 import * as utils from './utils';
-
 
 export default class Typist extends Component {
 
@@ -44,6 +45,7 @@ export default class Typist extends Component {
   state = {
     text: [],
     isDone: false,
+    delay: 0,
   }
 
   componentDidMount() {
@@ -82,6 +84,7 @@ export default class Typist extends Component {
   delayGenerator = (line, lineIdx, character, charIdx) => {
     const mean = this.props.avgTypingDelay;
     const std = this.props.stdTypingDelay;
+
     return this.props.delayGenerator(
       mean,
       std,
@@ -103,11 +106,28 @@ export default class Typist extends Component {
   typeLine = (line, lineIdx) => {
     if (!this.mounted) { return Promise.resolve(); }
     const { onLineTyped } = this.props;
+    let decoratedLine = line;
+
+    if (typeof line !== 'string') {
+      if (line.type && line.type.name === 'Backspace') {
+        if (line.props.line) {
+          decoratedLine = String('🔚').repeat(line.props.count);
+        } else {
+          decoratedLine = String('🔙').repeat(line.props.count);
+        }
+        if (line.props.delay > 0) {
+          this.setState({ delay: this.state.delay + line.props.delay });
+        }
+      } else if (line.type && line.type.name === 'Delay') {
+        this.setState({ delay: this.state.delay + line.props.ms });
+        decoratedLine = '⏰';
+      }
+    }
 
     return new Promise((resolve, reject) => {
       this.setState({ text: this.state.text.concat(['']) }, () => {
-        utils.eachPromise(line, this.typeCharacter, line, lineIdx)
-        .then(() => onLineTyped(line, lineIdx))
+        utils.eachPromise(decoratedLine, this.typeCharacter, decoratedLine, lineIdx)
+        .then(() => onLineTyped(decoratedLine, lineIdx))
         .then(resolve)
         .catch(reject);
       });
@@ -120,12 +140,31 @@ export default class Typist extends Component {
 
     return new Promise((resolve) => {
       const text = this.state.text.slice();
-      text[lineIdx] += character;
-      this.setState({ text }, () => {
+      switch (character) {
+        case '🔙': {
+          text[lineIdx - 1] = text[lineIdx - 1].substr(0, text[lineIdx - 1].length - 1);
+          break;
+        }
+        case '🔚': {
+          text[lineIdx - 1] = '';
+          break;
+        }
+        case '⏰':
+          break;
+        default: {
+          text[lineIdx] += character;
+          break;
+        }
+      }
+
+      const delay = this.state.delay || this.delayGenerator(line, lineIdx, character, charIdx);
+      if (this.state.delay > 0) {
+        this.setState({ delay: 0 });
+      }
+      setTimeout(() => this.setState({ text }, () => {
         onCharacterTyped(character, charIdx);
-        const delay = this.delayGenerator(line, lineIdx, character, charIdx);
-        setTimeout(resolve, delay);
-      });
+        resolve();
+      }), delay);
     });
   }
 
@@ -143,3 +182,6 @@ export default class Typist extends Component {
   }
 
 }
+
+Typist.Backspace = Backspace;
+Typist.Delay = Delay;
