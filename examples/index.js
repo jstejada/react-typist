@@ -20,10 +20,9 @@ class TypistExample extends React.Component {
       <div className="TypistExample">
         <Typist
           className="TypistExample-header"
-          avgTypingSpeed={10}
-          // avgTypingSpeed={40}
+          avgTypingSpeed={40}
           startDelay={0}
-          // startDelay={2000}
+          startDelay={2000}
           onTypingDone={this.onHeaderTyped}
         >
           <a href={docs}>React Typist</a>
@@ -32,7 +31,6 @@ class TypistExample extends React.Component {
           {this.state.renderMsg ? (
             <Typist
               className="TypistExample-message"
-              avgTypingSpeed={10}
               startDelay={500}
               cursor={{ hideWhenDone: true }}
             >

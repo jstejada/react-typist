@@ -82,9 +82,8 @@ export function extractTreeWithText(...args) {
     };
 
     // Recursively call on children of React Element
-    if (React.isValidElement(tree) &&
-      !(tree.type && (tree.type.name === 'Delay' || tree.type.name === 'Backspace'))
-    ) {
+    const name = tree.type && tree.type.name;
+    if (React.isValidElement(tree) && !(name === 'Delay' || name === 'Backspace')) {
       const fact = factMaker(tree);
       const children = React.Children.map(tree.props.children, recurse) || [];
       return [fact(...children), idx];
