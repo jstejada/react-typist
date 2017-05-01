@@ -110,14 +110,11 @@ export default class Typist extends Component {
 
     if (typeof line !== 'string') {
       if (line.type && line.type.name === 'Backspace') {
-        if (line.props.line) {
-          decoratedLine = String('🔚').repeat(line.props.count);
-        } else {
-          decoratedLine = String('🔙').repeat(line.props.count);
-        }
+        const char = line.props.line ? '🔙' : '🔚';
         if (line.props.delay > 0) {
           this.setState({ delay: this.state.delay + line.props.delay });
         }
+        decoratedLine = String(char).repeat(line.props.count);
       } else if (line.type && line.type.name === 'Delay') {
         this.setState({ delay: this.state.delay + line.props.ms });
         decoratedLine = '⏰';
@@ -140,29 +137,21 @@ export default class Typist extends Component {
 
     return new Promise((resolve) => {
       const text = this.state.text.slice();
-      switch (character) {
-        case '🔙': {
-          text[lineIdx - 1] = text[lineIdx - 1].substr(0, text[lineIdx - 1].length - 1);
-          break;
-        }
-        case '🔚': {
-          text[lineIdx - 1] = '';
-          break;
-        }
-        case '⏰':
-          break;
-        default: {
-          text[lineIdx] += character;
-          break;
-        }
+
+      if (character === '🔙') {
+        text[lineIdx - 1] = text[lineIdx - 1].substr(0, text[lineIdx - 1].length - 1);
+      } else if (character === '🔚') {
+        text[lineIdx - 1] = '';
+      } else if (character !== '⏰') {
+        text[lineIdx] += character;
       }
 
       this.setState({ text }, () => {
+        onCharacterTyped(character, charIdx);
         const delay = this.state.delay || this.delayGenerator(line, lineIdx, character, charIdx);
         if (this.state.delay > 0) {
           this.setState({ delay: 0 });
         }
-        onCharacterTyped(character, charIdx);
         setTimeout(resolve, delay);
       });
     });
