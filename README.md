@@ -200,6 +200,29 @@ function(mean, std, {line, lineIdx, charIdx, defDelayGenerator}) {
   return defDelayGenerator();
 }
 ```
+## Troubleshooting
+### Internet Explorer Compatibility
+React Typist makes use of Array.from() which is not supported in IE.
+
+`SCRIPT438: Object doesn't support property or method 'from' Typist.js (449,1)`
+
+To resolve this, [babel-polyfill](https://babeljs.io/docs/usage/polyfill/) can be added to your project.
+ 
+ ```shell
+ npm install --save babel-polyfill
+ ```
+ 
+You can now include this module in your app at the entry point.
+
+ES6: 
+```js
+import 'babel-polyfill'
+```
+
+CommonJS:
+```js
+require('babel-polyfill')
+```
 
 ## Development
 
