@@ -2,7 +2,7 @@ const path = require('path');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const config = require('./webpack.config');
 
-config.entry = './src/Typist.jsx';
+config.entry = ['babel-polyfill', './src/Typist.jsx'];
 config.output = {
   path: path.join(__dirname, './dist'),
   filename: 'Typist.js',
