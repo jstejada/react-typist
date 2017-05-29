@@ -1,6 +1,15 @@
 # React Typist Changelog
 
+### v1.1.1 (05/29/17)
 
+- Fixes
+  + Updated dist code
+
+- Development:
+  + Added dist command to the contribution section
+  + Added prop-types to package dependencies
+  
+  
 ### v1.1.0 (03/26/17)
 
 - Features:

@@ -239,6 +239,11 @@ If you just want to build the examples run:
 npm run examples
 ```
 
+Once you're done with your changes, make sure to update dist package by running:
+```shell
+npm run dist
+```
+
 #### To do
 
 * [x] Support delays in typing animation
