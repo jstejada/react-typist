@@ -183,7 +183,7 @@ function(mean, std, current = {line, lineIdx, character, charIdx, defDelayGenera
 * `current.lineIdx (int)`: Index of line of text (Typist child) currently being animated.
 * `current.character (string)`: Value of character that was just rendered.
 * `current.charIdx (int)`: Index of character that was just rendered.
-* `current.defaultDelayGenerator (function)`: Reference to default delay
+* `current.defDelayGenerator (function)`: Reference to default delay
 generator function to be able to fall back to.
 
 
