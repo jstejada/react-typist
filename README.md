@@ -129,11 +129,11 @@ Milliseconds before typing animation begins.
 
 Object containing options for cursor:
 
-* `show (bool)`: wether to display cursor at the end of text.
-* `blink (bool)`: wether to add blinking animation to cursor. You must also
+* `show (bool)`: whether to display cursor at the end of text.
+* `blink (bool)`: whether to add blinking animation to cursor. You must also
 include the [css](#cssBlink)
 * `element (string)`: character to use for the cursor
-* `hideWhenDone (bool)`: wether the cursor should be hidden after tyiping
+* `hideWhenDone (bool)`: whether the cursor should be hidden after tyiping
 animation is complete.
 * `hideWhenDoneDelay (int)`: delay in ms to be applied before hiding cursor when
 typing animation is complete.
