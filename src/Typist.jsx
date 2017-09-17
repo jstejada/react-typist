@@ -8,6 +8,7 @@ export default class Typist extends Component {
 
   static propTypes = {
     children: PropTypes.node,
+    component: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
     className: PropTypes.string,
     avgTypingDelay: PropTypes.number,
     stdTypingDelay: PropTypes.number,
@@ -21,6 +22,7 @@ export default class Typist extends Component {
 
   static defaultProps = {
     className: '',
+    component: 'div',
     avgTypingDelay: 70,
     stdTypingDelay: 25,
     startDelay: 0,
@@ -133,12 +135,13 @@ export default class Typist extends Component {
     const { className, cursor } = this.props;
     const { isDone } = this.state;
     const innerTree = utils.extractTreeWithText(this.props.children, this.state.text);
+    const WrapComponent = this.props.component;
 
     return (
-      <div className={`Typist ${className}`}>
+      <WrapComponent className={`Typist ${className}`}>
         {innerTree}
         <Cursor isDone={isDone} {...cursor} />
-      </div>
+      </WrapComponent>
     );
   }
 

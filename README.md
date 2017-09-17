@@ -69,6 +69,7 @@ Refer to [`examples/`](/examples) for more examples.
 
 ## Options
 * [`className`](#className)
+* [`component`](#component)
 * [`avgTypingDelay`](#avgTypingDelay)
 * [`stdTypingDelay`](#stdTypingDelay)
 * [`startDelay`](#startDelay)
@@ -91,6 +92,20 @@ have the CSS class `Typist` applied to it.
  will produce:
 ```xml
 <div class="Typist MyTypist"> Animate this text. </div>
+```
+
+<a name="component"></a>
+#### component
+*Default*: `div`
+
+Component tag to be applied to the Typist root node. **(string/React.Element)**
+
+```xml
+<Typist component="span"> Animate this text. </Typist>
+```
+ will produce:
+```xml
+<span class="Typist"> Animate this text. </span>
 ```
 
 <a name="avgTypingDelay"></a>
@@ -207,14 +222,14 @@ React Typist makes use of Array.from() which is not supported in IE.
 `SCRIPT438: Object doesn't support property or method 'from' Typist.js (449,1)`
 
 To resolve this, [babel-polyfill](https://babeljs.io/docs/usage/polyfill/) can be added to your project.
- 
+
  ```shell
  npm install --save babel-polyfill
  ```
- 
+
 You can now include this module in your app at the entry point.
 
-ES6: 
+ES6:
 ```js
 import 'babel-polyfill'
 ```

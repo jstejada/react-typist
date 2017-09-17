@@ -32,6 +32,7 @@ class TypistExample extends React.Component {
     return (
       <div className="TypistExample">
         <Typist
+          component="div"
           className="TypistExample-header"
           avgTypingSpeed={40}
           startDelay={2000}
