@@ -37,7 +37,7 @@ export default class Typist extends Component {
     this.linesToType = [];
 
     if (props.children) {
-      this.linesToType = utils.extractText(props.children);
+      this.linesToType = utils.extractTextFromElementTree(props.children);
     }
   }
 

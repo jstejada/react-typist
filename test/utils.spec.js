@@ -4,29 +4,33 @@ import * as utils from 'utils';
 
 
 describe('utils', () => {
-  describe('.extractText', () => {
+  describe('.extractTextFromElementTree', () => {
     it('returns array of lines to render when element passed', () => {
-      const res = utils.extractText(<div>Text</div>);
+      const res = utils.extractTextFromElementTree(<div>Text</div>);
       expect(res).toEqual(['Text']);
     });
 
     it('returns array of lines to render when strings passed', () => {
-      const res = utils.extractText(['t1', 't2']);
+      const res = utils.extractTextFromElementTree(['t1', 't2']);
       expect(res).toEqual(['t1', 't2']);
     });
 
     it('returns array of lines to render when array passed', () => {
-      const res = utils.extractText(['t1', <span>t2</span>]);
+      const res = utils.extractTextFromElementTree(['t1', <span>t2</span>]);
       expect(res).toEqual(['t1', 't2']);
     });
 
     it('returns array of lines to render when array of trees passed', () => {
-      const res = utils.extractText(['t1', <div>t2</div>, <span>t3<span>t4</span></span>]);
+      const res = utils.extractTextFromElementTree([
+        't1',
+        <div>t2</div>,
+        <span>t3<span>t4</span></span>,
+      ]);
       expect(res).toEqual(['t1', 't2', 't3', 't4']);
     });
 
     it('returns array of lines when tree passed', () => {
-      const res = utils.extractText(
+      const res = utils.extractTextFromElementTree(
         <div>
           T1
           <div><span>T2</span><span>T3</span></div>
@@ -38,7 +42,7 @@ describe('utils', () => {
     });
 
     it('returns empty array when nothing passed', () => {
-      const res = utils.extractText();
+      const res = utils.extractTextFromElementTree();
       expect(res).toEqual([]);
     });
   });

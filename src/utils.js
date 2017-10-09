@@ -29,25 +29,23 @@ export function exclude(obj, keys) {
   return res;
 }
 
-export function extractText(toType) {
-  const st = toType ? [toType] : [];
+export function extractTextFromElementTree(elementTree) {
+  const stack = elementTree ? [elementTree] : [];
   const lines = [];
 
-  while (st.length > 0) {
-    const cur = st.pop();
+  while (stack.length > 0) {
+    const current = stack.pop();
 
-    if (React.isValidElement(cur)) {
-      React.Children.forEach(cur.props.children, (child) => {
-        st.push(child);
+    if (React.isValidElement(current)) {
+      React.Children.forEach(current.props.children, (child) => {
+        stack.push(child);
       });
-    } else {
-      if (Array.isArray(cur)) {
-        for (const el of cur) {
-          st.push(el);
-        }
-      } else {
-        lines.unshift(cur);
+    } else if (Array.isArray(current)) {
+      for (const el of current) {
+        stack.push(el);
       }
+    } else {
+      lines.unshift(current);
     }
   }
   return lines;
