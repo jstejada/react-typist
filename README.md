@@ -69,6 +69,7 @@ Refer to [`examples/`](/examples) for more examples.
 
 ## Options
 * [`className`](#className)
+* [`component`](#component)
 * [`avgTypingDelay`](#avgTypingDelay)
 * [`stdTypingDelay`](#stdTypingDelay)
 * [`startDelay`](#startDelay)
@@ -91,6 +92,20 @@ have the CSS class `Typist` applied to it.
  will produce:
 ```xml
 <div class="Typist MyTypist"> Animate this text. </div>
+```
+
+<a name="component"></a>
+#### component
+*Default*: `div`
+
+Component tag to be applied to the Typist root node. **(string/React.Element)**
+
+```xml
+<Typist component="span"> Animate this text. </Typist>
+```
+ will produce:
+```xml
+<span class="Typist"> Animate this text. </span>
 ```
 
 <a name="avgTypingDelay"></a>
