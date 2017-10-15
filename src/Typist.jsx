@@ -37,12 +37,12 @@ export default class Typist extends Component {
     this.linesToType = [];
 
     if (props.children) {
-      this.linesToType = utils.extractTextFromElementTree(props.children);
+      this.linesToType = utils.extractTextFromElement(props.children);
     }
   }
 
   state = {
-    text: [],
+    textLines: [],
     isDone: false,
   }
 
@@ -61,9 +61,9 @@ export default class Typist extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    for (let idx = 0; idx < nextState.text.length; idx++) {
-      const txt = this.state.text[idx];
-      const ntxt = nextState.text[idx];
+    for (let idx = 0; idx < nextState.textLines.length; idx++) {
+      const txt = this.state.textLines[idx];
+      const ntxt = nextState.textLines[idx];
       if (txt !== ntxt && ntxt.length > 0) return true;
     }
     return this.state.isDone !== nextState.isDone;
@@ -105,7 +105,7 @@ export default class Typist extends Component {
     const { onLineTyped } = this.props;
 
     return new Promise((resolve, reject) => {
-      this.setState({ text: this.state.text.concat(['']) }, () => {
+      this.setState({ textLines: this.state.textLines.concat(['']) }, () => {
         utils.eachPromise(line, this.typeCharacter, line, lineIdx)
         .then(() => onLineTyped(line, lineIdx))
         .then(resolve)
@@ -119,9 +119,9 @@ export default class Typist extends Component {
     const { onCharacterTyped } = this.props;
 
     return new Promise((resolve) => {
-      const text = this.state.text.slice();
-      text[lineIdx] += character;
-      this.setState({ text }, () => {
+      const textLines = this.state.textLines.slice();
+      textLines[lineIdx] += character;
+      this.setState({ textLines }, () => {
         onCharacterTyped(character, charIdx);
         const delay = this.delayGenerator(line, lineIdx, character, charIdx);
         setTimeout(resolve, delay);
@@ -132,7 +132,10 @@ export default class Typist extends Component {
   render() {
     const { className, cursor } = this.props;
     const { isDone } = this.state;
-    const innerTree = utils.extractTreeWithText(this.props.children, this.state.text);
+    const innerTree = utils.cloneElementWithSpecifiedText({
+      element: this.props.children,
+      textLines: this.state.textLines,
+    });
 
     return (
       <div className={`Typist ${className}`}>

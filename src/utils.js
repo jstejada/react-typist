@@ -29,8 +29,8 @@ export function exclude(obj, keys) {
   return res;
 }
 
-export function extractTextFromElementTree(elementTree) {
-  const stack = elementTree ? [elementTree] : [];
+export function extractTextFromElement(element) {
+  const stack = element ? [element] : [];
   const lines = [];
 
   while (stack.length > 0) {
@@ -51,44 +51,48 @@ export function extractTextFromElementTree(elementTree) {
   return lines;
 }
 
-export function elementFactoryMaker() {
-  let key = 0;
-  return (el) => {
-    const tag = el.type;
-    const props = exclude(el.props, ['children']);
-    props.key = `Typist-el-${key++}`;
-    return React.createElement.bind(null, tag, props);
-  };
+export function cloneElement(element, children) {
+  const tag = element.type;
+  const props = exclude(element.props, ['children']);
+  // eslint-disable-next-line
+  props.key = `Typist-element-${tag}-${Date.now()}`;
+  return React.createElement(tag, props, ...children);
 }
 
-export function extractTreeWithText(...args) {
-  if (!args[0]) return void(0);
-  const factMaker = elementFactoryMaker();
+function cloneElementWithSpecifiedTextAtIndex(tree, textLines, textIdx) {
+  if (textIdx >= textLines.length) {
+    return [null, textIdx];
+  }
 
-  const inner = (tree, text, textIdx) => {
-    if (textIdx >= text.length) return [null, textIdx];
-    let idx = textIdx;
-    const recurse = (ch) => {
-      const [child, advIdx] = inner(ch, text, idx);
-      idx = advIdx;
-      return child;
-    };
-
-    // Recursively call on children of React Element
-    if (React.isValidElement(tree)) {
-      const fact = factMaker(tree);
-      const children = React.Children.map(tree.props.children, recurse) || [];
-      return [fact(...children), idx];
-    }
-
-    // Recursively call on array
-    if (Array.isArray(tree)) {
-      const children = tree.map(recurse);
-      return [children, idx];
-    }
-
-    // Return text
-    return [text[idx], idx + 1];
+  let idx = textIdx;
+  const recurse = (element) => {
+    const [child, advIdx] = cloneElementWithSpecifiedTextAtIndex(
+      element,
+      textLines,
+      idx
+    );
+    idx = advIdx;
+    return child;
   };
-  return inner(...args, 0)[0];
+
+  if (React.isValidElement(tree)) {
+    const clonedChildren = React.Children.map(tree.props.children, recurse) || [];
+    return [cloneElement(tree, clonedChildren), idx];
+  }
+
+  if (Array.isArray(tree)) {
+    const children = tree.map(recurse);
+    return [children, idx];
+  }
+
+  // Anything that isn't a React element or an Array is interpreted as text
+  return [textLines[idx], idx + 1];
+}
+
+export function cloneElementWithSpecifiedText({ element, textLines }) {
+  if (!element) {
+    return undefined;
+  }
+
+  return cloneElementWithSpecifiedTextAtIndex(element, textLines, 0)[0];
 }
