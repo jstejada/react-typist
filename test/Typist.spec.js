@@ -49,8 +49,8 @@ describe('Typist', () => {
     describe('when children passed', () => {
       const assertLine = (inst, line, acum = '') => {
         for (let idx = 1; idx <= line.length; idx++) {
-          expect(findDOMNode(inst).textContent).toEqual(`${acum}${line.slice(0, idx)}|`);
           jasmine.clock().tick(100);
+          expect(findDOMNode(inst).textContent).toEqual(`${acum}${line.slice(0, idx)}|`);
           Promise.runAll();
         }
       };
@@ -206,9 +206,10 @@ describe('Typist', () => {
     it('starts animation after specified delay', () => {
       props.startDelay = 500;
       const inst = TestUtils.renderIntoDocument(<Typist {...props}>Test</Typist>);
-      expect(findDOMNode(inst).textContent).toEqual('|');
       jasmine.clock().tick(500);
+      expect(findDOMNode(inst).textContent).toEqual('|');
       Promise.runAll();
+      jasmine.clock().tick(500);
       expect(findDOMNode(inst).textContent).toEqual('T|');
       jasmine.clock().tick(100);
       typeAll();

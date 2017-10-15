@@ -35,11 +35,18 @@ export function extractTextFromElement(element) {
 
   while (stack.length > 0) {
     const current = stack.pop();
-
     if (React.isValidElement(current)) {
-      React.Children.forEach(current.props.children, (child) => {
-        stack.push(child);
-      });
+      const name = current.type && current.type.name;
+      if (name === 'Backspace' || name === 'Delay') {
+        // If it is a `Backspace` or `Delay` element, we want to keep it in our
+        // `textLines` state. These will serve as markers when updating the
+        // state of the text
+        lines.unshift(current);
+      } else {
+        React.Children.forEach(current.props.children, (child) => {
+          stack.push(child);
+        });
+      }
     } else if (Array.isArray(current)) {
       for (const el of current) {
         stack.push(el);
@@ -48,6 +55,7 @@ export function extractTextFromElement(element) {
       lines.unshift(current);
     }
   }
+
   return lines;
 }
 
@@ -59,15 +67,15 @@ export function cloneElement(element, children) {
   return React.createElement(tag, props, ...children);
 }
 
-function cloneElementWithSpecifiedTextAtIndex(tree, textLines, textIdx) {
+function cloneElementWithSpecifiedTextAtIndex(element, textLines, textIdx) {
   if (textIdx >= textLines.length) {
     return [null, textIdx];
   }
 
   let idx = textIdx;
-  const recurse = (element) => {
+  const recurse = (el) => {
     const [child, advIdx] = cloneElementWithSpecifiedTextAtIndex(
-      element,
+      el,
       textLines,
       idx
     );
@@ -75,13 +83,19 @@ function cloneElementWithSpecifiedTextAtIndex(tree, textLines, textIdx) {
     return child;
   };
 
-  if (React.isValidElement(tree)) {
-    const clonedChildren = React.Children.map(tree.props.children, recurse) || [];
-    return [cloneElement(tree, clonedChildren), idx];
+  const name = element.type && element.type.name;
+  const isNonTypistElement = (
+    React.isValidElement(element) &&
+    !(name === 'Delay' || name === 'Backspace')
+  );
+
+  if (isNonTypistElement) {
+    const clonedChildren = React.Children.map(element.props.children, recurse) || [];
+    return [cloneElement(element, clonedChildren), idx];
   }
 
-  if (Array.isArray(tree)) {
-    const children = tree.map(recurse);
+  if (Array.isArray(element)) {
+    const children = element.map(recurse);
     return [children, idx];
   }
 
