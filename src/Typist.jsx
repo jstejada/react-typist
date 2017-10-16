@@ -114,11 +114,10 @@ export default class Typist extends Component {
     const isBackspaceOrDelayElement = typeof line !== 'string';
     if (isBackspaceOrDelayElement) {
       if (line.type && line.type.name === 'Backspace') {
-        const cmdChar = line.props.wholeLine ? '🔚' : '🔙';
         if (line.props.delay > 0) {
           this.delay = this.delay + line.props.delay;
         }
-        decoratedLine = String(cmdChar).repeat(line.props.count);
+        decoratedLine = String('🔙').repeat(line.props.count);
       } else if (line.type && line.type.name === 'Delay') {
         this.delay = this.delay + line.props.ms;
         decoratedLine = '⏰';
@@ -145,8 +144,6 @@ export default class Typist extends Component {
       if (character === '🔙') {
         textLines[lineIdx - 1] = textLines[lineIdx - 1]
           .substr(0, textLines[lineIdx - 1].length - 1);
-      } else if (character === '🔚') {
-        textLines[lineIdx - 1] = '';
       } else if (character !== '⏰') {
         textLines[lineIdx] += character;
       }
