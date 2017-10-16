@@ -1,6 +1,6 @@
 # React Typist
-React Component for typing animations. Wrap Typist around your text or any
-ReactComponent tree to animate text inside the tree. Easily stylable and highly
+React Component for making typing animations. Wrap `Typist` around your text or any
+element tree to animate text inside the tree. Easily stylable and highly
 configurable.
 
 
@@ -44,13 +44,17 @@ blink. To include it, you must include
 
 
 ## Children
-Typist will animate any text present in its children and descendents. Each text
+Typist will animate any text present in its descendents. Each text
 node will be animated as it is encountered in depth-first traversal of the
-children tree, one after the other. Typist can receive as children any objects
-a regular ReactComponent can.
+`children` tree, one after the other.
 
-You can use any props in the children you pass to Typist, including your own
-css classes. This allows you to easily style your text inside Typist:
+Typist can take as `children` any valid node that can be rendered in a React
+application, i.e. it could be undefined, null, a boolean, a number, a string,
+a React element, or an array of any of those types recursively.
+
+This also implies that you are free to pass any props to the `children` of Typist,
+including your own css classes (as in any React application). This allows you to
+easily style your text inside Typist:
 
 ```jsx
 <Typist>
@@ -67,7 +71,63 @@ css classes. This allows you to easily style your text inside Typist:
 Refer to [`examples/`](/examples) for more examples.
 
 
-## Options
+## Typist.Delay
+In order to insert delays into your animation, you can use the `Typist.Delay`
+Component:
+
+```jsx
+<Typist>
+  <p> First Sentence </p>
+  <Typist.Delay ms={500} />
+  <br />
+  This won't be animated until 500ms after the first sentenced is rendered
+</Typist>
+```
+
+Refer to [`examples/`](/examples) for more examples.
+
+### Typist.Delay Props
+* [`ms`](#ms)
+
+<a name="ms"></a>
+#### ms
+*Required*
+
+Milliseconds to apply for the delay
+
+
+## Typist.Backspace
+
+Typist also supports backspace animations via the `Typist.Backspace` Component:
+
+```jsx
+<Typist>
+  <span> First Sentence </span>
+  <Typist.Backspace count={8} delay={200} />
+  <span> Phrase </span>
+</Typist>
+```
+
+Refer to [`examples/`](/examples) for more examples.
+
+### Typist.Backspace Props
+* [`count`](#count)
+* [`delay`](#delay)
+
+<a name="count"></a>
+#### count
+*Default*: `1`
+
+Number of characters to backspace
+
+<a name="delay"></a>
+#### delay
+*Default*: `0`
+
+Delay in milliseconds before the backspace animation starts
+
+
+## Typist Props
 * [`className`](#className)
 * [`avgTypingDelay`](#avgTypingDelay)
 * [`stdTypingDelay`](#stdTypingDelay)
@@ -85,11 +145,11 @@ Refer to [`examples/`](/examples) for more examples.
 CSS class name to be applied to the Typist root node. Typist will always
 have the CSS class `Typist` applied to it.
 
-```xml
+```jsx
 <Typist className="MyTypist"> Animate this text. </Typist>
 ```
  will produce:
-```xml
+```jsx
 <div class="Typist MyTypist"> Animate this text. </div>
 ```
 
@@ -106,7 +166,7 @@ strokes is not uniform, to make the animation more human like.
 *Default*: `25`
 
 Standard deviation of typing delay between keystrokes of the typing animation.
-**(Less means more uniform, less variance between values)**.
+**(Less means more uniform, i.e. less variance between values)**.
 
 <a name="startDelay"></a>
 #### startDelay
@@ -169,7 +229,11 @@ Function to be called when typing animation is complete.
 Function to be called to generate the typing delay (in ms) for every keystroke
 of the animation. Every time this function is called it should return a value
 in milliseconds. This function can be used to provide your own typing delay
-distribution, e.g. uniform (always 100ms) or even deterministic.
+distribution, for example uniform (e.g. always 100ms), or a deterministic
+distribution.
+
+However, if you wish to insert delays at specific points in the animation,
+consider useing the [`Delay`](#Typist.Delay) Component instead.
 
 ```js
 function(mean, std, current = {line, lineIdx, character, charIdx, defDelayGenerator}) {
@@ -200,6 +264,8 @@ function(mean, std, {line, lineIdx, charIdx, defDelayGenerator}) {
   return defDelayGenerator();
 }
 ```
+
+
 ## Troubleshooting
 ### Internet Explorer Compatibility
 React Typist makes use of Array.from() which is not supported in IE.
@@ -243,15 +309,6 @@ Once you're done with your changes, make sure to update dist package by running:
 ```shell
 npm run dist
 ```
-
-#### To do
-
-* [x] Support delays in typing animation
-* [x] Support arbitrary element trees
-* [ ] Refactor logic outside component, better maintainability
-* [ ] Improve performance of rendering arbitrary element trees
-* [ ] Support backspace animation
-
 
 ## Running Tests
 
