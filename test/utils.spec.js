@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactMatchers from 'jasmine-react-matchers';
+import Typist from 'Typist';
 import * as utils from 'utils';
 
 
@@ -44,6 +45,46 @@ describe('utils', () => {
     it('returns empty array when nothing passed', () => {
       const res = utils.extractTextFromElement();
       expect(res).toEqual([]);
+    });
+
+    it('includes Backspace elements as part of the returned array of text', () => {
+      const backspace = <Typist.Backspace />;
+      const res = utils.extractTextFromElement(
+        <div>
+          T1
+          <div><span>T2{backspace}</span><span>T3</span></div>
+          <span>T4</span>
+          {5}
+        </div>
+      );
+      expect(res).toEqual(['T1', 'T2', backspace, 'T3', 'T4', 5]);
+    });
+
+    it('includes Delay elements as part of the returned array of text', () => {
+      const delay = <Typist.Delay ms={500} />;
+      const res = utils.extractTextFromElement(
+        <div>
+          T1
+          <div><span>T2{delay}</span><span>T3</span></div>
+          <span>T4</span>
+          {5}
+        </div>
+      );
+      expect(res).toEqual(['T1', 'T2', delay, 'T3', 'T4', 5]);
+    });
+
+    it('includes Backspace or Delay elements as part of the returned array of text', () => {
+      const delay = <Typist.Delay ms={500} />;
+      const backspace = <Typist.Backspace />;
+      const res = utils.extractTextFromElement(
+        <div>
+          T1
+          <div><span>T2{delay}</span><span>T3{backspace}</span></div>
+          <span>T4</span>
+          {5}
+        </div>
+      );
+      expect(res).toEqual(['T1', 'T2', delay, 'T3', backspace, 'T4', 5]);
     });
   });
 
@@ -188,6 +229,30 @@ describe('utils', () => {
         textLines: [],
       });
       expect(res).toBeUndefined();
+    });
+
+    it('correctly renders Delay or Backspace elements in the cloned element', () => {
+      const backspace = <Typist.Backspace />;
+      const delay = <Typist.Delay ms={500} />;
+      const element = (
+        <div>
+          T1
+          <div><span>T2{backspace}</span><span>T3{delay}</span></div>
+          <span>T4</span>
+        </div>
+      );
+      const expected = (
+        <div>
+          E1
+          <div><span>E2{backspace}</span><span>E3{delay}</span></div>
+          <span>E4</span>
+        </div>
+      );
+      const actual = utils.cloneElementWithSpecifiedText({
+        element,
+        textLines: ['E1', 'E2', backspace, 'E3', delay, 'E4'],
+      });
+      expect(actual).toEqualElement(expected);
     });
   });
 });

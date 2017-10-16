@@ -5,6 +5,9 @@ import Backspace from './Backspace';
 import Delay from './Delay';
 import * as utils from './utils';
 
+
+const ACTION_CHARS = ['🔙', '⏰'];
+
 export default class Typist extends Component {
 
   static propTypes = {
@@ -36,7 +39,7 @@ export default class Typist extends Component {
     super(props);
     this.mounted = false;
     this.linesToType = [];
-    this.delay = 0;
+    this.delay = null;
 
     if (props.children) {
       this.linesToType = utils.extractTextFromElement(props.children);
@@ -63,10 +66,15 @@ export default class Typist extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
+    if (nextState.textLines.length !== this.state.textLines.length) {
+      return true;
+    }
     for (let idx = 0; idx < nextState.textLines.length; idx++) {
-      const txt = this.state.textLines[idx];
-      const ntxt = nextState.textLines[idx];
-      if (txt !== ntxt && ntxt.length > 0) return true;
+      const line = this.state.textLines[idx];
+      const nextLine = nextState.textLines[idx];
+      if (line !== nextLine) {
+        return true;
+      }
     }
     return this.state.isDone !== nextState.isDone;
   }
@@ -105,21 +113,22 @@ export default class Typist extends Component {
 
   typeLine = (line, lineIdx) => {
     if (!this.mounted) { return Promise.resolve(); }
-    const { onLineTyped } = this.props;
-    let decoratedLine = line;
 
-    // If `line` is not a string, it is either a `Backspace` or a `Delay`
-    // element.
+    // If `line` is not a string, it is either a `Backspace` or a `Delay` element.
     // See `extractTextFromElement`
     const isBackspaceOrDelayElement = typeof line !== 'string';
+
+    let decoratedLine = line;
+    const { onLineTyped } = this.props;
+
     if (isBackspaceOrDelayElement) {
       if (line.type && line.type.name === 'Backspace') {
         if (line.props.delay > 0) {
-          this.delay = this.delay + line.props.delay;
+          this.delay = line.props.delay;
         }
         decoratedLine = String('🔙').repeat(line.props.count);
       } else if (line.type && line.type.name === 'Delay') {
-        this.delay = this.delay + line.props.ms;
+        this.delay = line.props.ms;
         decoratedLine = '⏰';
       }
     }
@@ -141,16 +150,33 @@ export default class Typist extends Component {
     return new Promise((resolve) => {
       const textLines = this.state.textLines.slice();
 
-      if (character === '🔙') {
-        textLines[lineIdx - 1] = textLines[lineIdx - 1]
-          .substr(0, textLines[lineIdx - 1].length - 1);
-      } else if (character !== '⏰') {
+      const isBackspace = character === '🔙';
+      const isDelay = character === '⏰';
+      if (isDelay) {
+        resolve();
+        return;
+      }
+
+      if (isBackspace && lineIdx > 0) {
+        let prevLineIdx = lineIdx - 1;
+        let prevLine = textLines[prevLineIdx];
+
+        for (let idx = prevLineIdx; idx >= 0; idx --) {
+          if (prevLine.length > 0 && !ACTION_CHARS.includes(prevLine[0])) {
+            break;
+          }
+          prevLineIdx = idx;
+          prevLine = textLines[prevLineIdx];
+        }
+
+        textLines[prevLineIdx] = prevLine.substr(0, prevLine.length - 1);
+      } else {
         textLines[lineIdx] += character;
       }
 
       const delay = this.delay || this.delayGenerator(line, lineIdx, character, charIdx);
-      this.delay = 0;
       setTimeout(() => this.setState({ textLines }, () => {
+        this.delay = null;
         onCharacterTyped(character, charIdx);
         resolve();
       }), delay);

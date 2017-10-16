@@ -50,8 +50,8 @@ describe('Typist', () => {
       const assertLine = (inst, line, acum = '') => {
         for (let idx = 1; idx <= line.length; idx++) {
           jasmine.clock().tick(100);
-          expect(findDOMNode(inst).textContent).toEqual(`${acum}${line.slice(0, idx)}|`);
           Promise.runAll();
+          expect(findDOMNode(inst).textContent).toEqual(`${acum}${line.slice(0, idx)}|`);
         }
       };
 
@@ -157,6 +157,103 @@ describe('Typist', () => {
         );
         typeAll();
         expect(spy).toHaveBeenCalled();
+      });
+
+      describe('when using Backspace', () => {
+        it('correctly backspaces the specified count', () => {
+          const strs = ['Test1', 'Test2'];
+          const inst = TestUtils.renderIntoDocument(
+            <Typist {...props}>
+              Test1
+              <span>Test2<Typist.Backspace count={2} /></span>
+            </Typist>
+          );
+
+          assertLines(inst, strs);
+
+          jasmine.clock().tick(100);
+          Promise.runAll();
+          expect(findDOMNode(inst).textContent).toEqual('Test1Test|');
+
+          jasmine.clock().tick(100);
+          Promise.runAll();
+          expect(findDOMNode(inst).textContent).toEqual('Test1Tes|');
+
+          const span = TestUtils.scryRenderedDOMComponentsWithTag(inst, 'span')[0];
+          expect(findDOMNode(span).textContent).toEqual('Tes');
+        });
+
+        it('correctly backspaces the specified count even when it goes to a previous line', () => {
+          const strs = ['Test1', 'T'];
+          const inst = TestUtils.renderIntoDocument(
+            <Typist {...props}>
+              Test1
+              <span>T<Typist.Backspace count={2} /></span>
+            </Typist>
+          );
+
+          assertLines(inst, strs);
+
+          jasmine.clock().tick(100);
+          Promise.runAll();
+          expect(findDOMNode(inst).textContent).toEqual('Test1|');
+
+          jasmine.clock().tick(100);
+          Promise.runAll();
+          expect(findDOMNode(inst).textContent).toEqual('Test|');
+        });
+
+        it('correctly uses a delay when backspacing if specified', () => {
+          const strs = ['Test1', 'Test2'];
+          const inst = TestUtils.renderIntoDocument(
+            <Typist {...props}>
+              Test1
+              <span>Test2<Typist.Backspace count={2} delay={500} /></span>
+            </Typist>
+          );
+
+          assertLines(inst, strs);
+
+          expect(findDOMNode(inst).textContent).toEqual('Test1Test2|');
+          jasmine.clock().tick(100);
+          expect(() => Promise.runAll()).toThrow(); // There should be no promises to run
+          expect(findDOMNode(inst).textContent).toEqual('Test1Test2|');
+
+          jasmine.clock().tick(400);
+          Promise.runAll();
+          expect(findDOMNode(inst).textContent).toEqual('Test1Test|');
+
+          jasmine.clock().tick(100);
+          Promise.runAll();
+          expect(findDOMNode(inst).textContent).toEqual('Test1Tes|');
+
+          const span = TestUtils.scryRenderedDOMComponentsWithTag(inst, 'span')[0];
+          expect(findDOMNode(span).textContent).toEqual('Tes');
+        });
+      });
+
+      describe('when using Delay', () => {
+        it('correctly applies the delay', () => {
+          const strs = ['Test1', 'Test2'];
+          const inst = TestUtils.renderIntoDocument(
+            <Typist {...props}>
+              Test1
+              <span>Test2<Typist.Delay ms={500} /></span>
+              B
+            </Typist>
+          );
+
+          assertLines(inst, strs);
+
+          expect(findDOMNode(inst).textContent).toEqual('Test1Test2|');
+          jasmine.clock().tick(100);
+          expect(() => Promise.runAll()).toThrow(); // There should be no promises to run
+          expect(findDOMNode(inst).textContent).toEqual('Test1Test2|');
+
+          jasmine.clock().tick(400);
+          Promise.runAll();
+          expect(findDOMNode(inst).textContent).toEqual('Test1Test2B|');
+        });
       });
     });
   });

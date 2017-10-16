@@ -63,7 +63,7 @@ export function cloneElement(element, children) {
   const tag = element.type;
   const props = exclude(element.props, ['children']);
   // eslint-disable-next-line
-  props.key = `Typist-element-${tag}-${Date.now() + Math.random()}`;
+  props.key = `Typist-element-${tag}-${Date.now() + Math.random() + Math.random()}`;
   return React.createElement(tag, props, ...children);
 }
 
