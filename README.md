@@ -233,7 +233,7 @@ distribution, for example uniform (e.g. always 100ms), or a deterministic
 distribution.
 
 However, if you wish to insert delays at specific points in the animation,
-consider useing the [`Delay`](#Typist.Delay) Component instead.
+consider useing the [`Delay`](#typistdelay) Component instead.
 
 ```js
 function(mean, std, current = {line, lineIdx, character, charIdx, defDelayGenerator}) {
