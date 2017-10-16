@@ -292,15 +292,14 @@ require('babel-polyfill')
 
 ## Development
 
-Run:
+To build the examples and start the dev server, run:
 ```shell
 npm start
 ```
+Now, open `http://localhost:8080` and start hacking!
 
-to build the examples and start the dev server. Now, open `http://localhost:8080`
-and start hacking!
 
-If you just want to build the examples run:
+If you just want to build the examples, run:
 ```shell
 npm run examples
 ```
