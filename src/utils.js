@@ -1,6 +1,8 @@
 import React from 'react';
 
-export const sleep = (val) => new Promise((resolve) => setTimeout(resolve, val));
+export const sleep = (val) => new Promise((resolve) => (
+  val != null ? setTimeout(resolve, val) : resolve()
+));
 
 export function gaussianRnd(mean, std) {
   const times = 12;

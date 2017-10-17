@@ -39,7 +39,7 @@ export default class Typist extends Component {
     super(props);
     this.mounted = false;
     this.linesToType = [];
-    this.delay = null;
+    this.introducedDelay = null;
 
     if (props.children) {
       this.linesToType = utils.extractTextFromElement(props.children);
@@ -124,11 +124,11 @@ export default class Typist extends Component {
     if (isBackspaceOrDelayElement) {
       if (line.type && line.type.name === 'Backspace') {
         if (line.props.delay > 0) {
-          this.delay = line.props.delay;
+          this.introducedDelay = line.props.delay;
         }
         decoratedLine = String('🔙').repeat(line.props.count);
       } else if (line.type && line.type.name === 'Delay') {
-        this.delay = line.props.ms;
+        this.introducedDelay = line.props.ms;
         decoratedLine = '⏰';
       }
     }
@@ -150,36 +150,40 @@ export default class Typist extends Component {
     return new Promise((resolve) => {
       const textLines = this.state.textLines.slice();
 
-      const isBackspace = character === '🔙';
-      const isDelay = character === '⏰';
-      if (isDelay) {
-        resolve();
-        return;
-      }
+      utils.sleep(this.introducedDelay)
+      .then(() => {
+        this.introducedDelay = null;
 
-      if (isBackspace && lineIdx > 0) {
-        let prevLineIdx = lineIdx - 1;
-        let prevLine = textLines[prevLineIdx];
-
-        for (let idx = prevLineIdx; idx >= 0; idx --) {
-          if (prevLine.length > 0 && !ACTION_CHARS.includes(prevLine[0])) {
-            break;
-          }
-          prevLineIdx = idx;
-          prevLine = textLines[prevLineIdx];
+        const isBackspace = character === '🔙';
+        const isDelay = character === '⏰';
+        if (isDelay) {
+          resolve();
+          return;
         }
 
-        textLines[prevLineIdx] = prevLine.substr(0, prevLine.length - 1);
-      } else {
-        textLines[lineIdx] += character;
-      }
+        if (isBackspace && lineIdx > 0) {
+          let prevLineIdx = lineIdx - 1;
+          let prevLine = textLines[prevLineIdx];
 
-      const delay = this.delay || this.delayGenerator(line, lineIdx, character, charIdx);
-      setTimeout(() => this.setState({ textLines }, () => {
-        this.delay = null;
-        onCharacterTyped(character, charIdx);
-        resolve();
-      }), delay);
+          for (let idx = prevLineIdx; idx >= 0; idx --) {
+            if (prevLine.length > 0 && !ACTION_CHARS.includes(prevLine[0])) {
+              break;
+            }
+            prevLineIdx = idx;
+            prevLine = textLines[prevLineIdx];
+          }
+
+          textLines[prevLineIdx] = prevLine.substr(0, prevLine.length - 1);
+        } else {
+          textLines[lineIdx] += character;
+        }
+
+        this.setState({ textLines }, () => {
+          const delay = this.delayGenerator(line, lineIdx, character, charIdx);
+          onCharacterTyped(character, charIdx);
+          setTimeout(resolve, delay);
+        });
+      });
     });
   }
 

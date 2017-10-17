@@ -49,9 +49,9 @@ describe('Typist', () => {
     describe('when children passed', () => {
       const assertLine = (inst, line, acum = '') => {
         for (let idx = 1; idx <= line.length; idx++) {
+          expect(findDOMNode(inst).textContent).toEqual(`${acum}${line.slice(0, idx)}|`);
           jasmine.clock().tick(100);
           Promise.runAll();
-          expect(findDOMNode(inst).textContent).toEqual(`${acum}${line.slice(0, idx)}|`);
         }
       };
 
@@ -171,13 +171,13 @@ describe('Typist', () => {
 
           assertLines(inst, strs);
 
-          jasmine.clock().tick(100);
-          Promise.runAll();
           expect(findDOMNode(inst).textContent).toEqual('Test1Test|');
-
           jasmine.clock().tick(100);
           Promise.runAll();
+
           expect(findDOMNode(inst).textContent).toEqual('Test1Tes|');
+          jasmine.clock().tick(100);
+          Promise.runAll();
 
           const span = TestUtils.scryRenderedDOMComponentsWithTag(inst, 'span')[0];
           expect(findDOMNode(span).textContent).toEqual('Tes');
@@ -194,13 +194,13 @@ describe('Typist', () => {
 
           assertLines(inst, strs);
 
-          jasmine.clock().tick(100);
-          Promise.runAll();
           expect(findDOMNode(inst).textContent).toEqual('Test1|');
-
           jasmine.clock().tick(100);
           Promise.runAll();
+
           expect(findDOMNode(inst).textContent).toEqual('Test|');
+          jasmine.clock().tick(100);
+          Promise.runAll();
         });
 
         it('correctly uses a delay when backspacing if specified', () => {
