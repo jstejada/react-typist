@@ -33,6 +33,14 @@ export function exclude(obj, keys) {
   return res;
 }
 
+export function isBackspaceElement(element) {
+  return element && element.type === Backspace;
+}
+
+export function isDelayElement(element) {
+  return element && element.type === Delay;
+}
+
 export function extractTextFromElement(element) {
   const stack = element ? [element] : [];
   const lines = [];
@@ -40,7 +48,7 @@ export function extractTextFromElement(element) {
   while (stack.length > 0) {
     const current = stack.pop();
     if (React.isValidElement(current)) {
-      if (current.type === Backspace || current.type === Delay) {
+      if (isBackspaceElement(current) || isDelayElement(current)) {
         // If it is a `Backspace` or `Delay` element, we want to keep it in our
         // `textLines` state. These will serve as markers when updating the
         // state of the text
@@ -88,7 +96,7 @@ function cloneElementWithSpecifiedTextAtIndex(element, textLines, textIdx) {
 
   const isNonTypistElement = (
     React.isValidElement(element) &&
-    !(element.type === Delay || element.type === Backspace)
+    !(isBackspaceElement(element) || isDelayElement(element))
   );
 
   if (isNonTypistElement) {

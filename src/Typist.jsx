@@ -114,23 +114,17 @@ export default class Typist extends Component {
   typeLine = (line, lineIdx) => {
     if (!this.mounted) { return Promise.resolve(); }
 
-    // If `line` is not a string, it is either a `Backspace` or a `Delay` element.
-    // See `extractTextFromElement`
-    const isBackspaceOrDelayElement = typeof line !== 'string';
-
     let decoratedLine = line;
     const { onLineTyped } = this.props;
 
-    if (isBackspaceOrDelayElement) {
-      if (line.type && line.type.name === 'Backspace') {
-        if (line.props.delay > 0) {
-          this.introducedDelay = line.props.delay;
-        }
-        decoratedLine = String('🔙').repeat(line.props.count);
-      } else if (line.type && line.type.name === 'Delay') {
-        this.introducedDelay = line.props.ms;
-        decoratedLine = '⏰';
+    if (utils.isBackspaceElement(line)) {
+      if (line.props.delay > 0) {
+        this.introducedDelay = line.props.delay;
       }
+      decoratedLine = String('🔙').repeat(line.props.count);
+    } else if (utils.isDelayElement(line)) {
+      this.introducedDelay = line.props.ms;
+      decoratedLine = '⏰';
     }
 
     return new Promise((resolve, reject) => {
