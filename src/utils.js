@@ -1,4 +1,6 @@
 import React from 'react';
+import Backspace from './Backspace';
+import Delay from './Delay';
 
 export const sleep = (val) => new Promise((resolve) => (
   val != null ? setTimeout(resolve, val) : resolve()
@@ -38,8 +40,7 @@ export function extractTextFromElement(element) {
   while (stack.length > 0) {
     const current = stack.pop();
     if (React.isValidElement(current)) {
-      const name = current.type && current.type.name;
-      if (name === 'Backspace' || name === 'Delay') {
+      if (current.type === Backspace || current.type === Delay) {
         // If it is a `Backspace` or `Delay` element, we want to keep it in our
         // `textLines` state. These will serve as markers when updating the
         // state of the text
@@ -85,10 +86,9 @@ function cloneElementWithSpecifiedTextAtIndex(element, textLines, textIdx) {
     return child;
   };
 
-  const name = element.type && element.type.name;
   const isNonTypistElement = (
     React.isValidElement(element) &&
-    !(name === 'Delay' || name === 'Backspace')
+    !(element.type === Delay || element.type === Backspace)
   );
 
   if (isNonTypistElement) {
