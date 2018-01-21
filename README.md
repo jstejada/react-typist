@@ -1,4 +1,4 @@
-# React Typist
+# React Typist [![npm](https://img.shields.io/npm/dm/react-typist.svg)]() [![npm](https://img.shields.io/npm/v/react-typist.svg)]()
 React Component for making typing animations. Wrap `Typist` around your text or any
 element tree to animate text inside the tree. Easily stylable and highly
 configurable.
