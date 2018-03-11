@@ -32,16 +32,11 @@ export default class MyComponent extends Component {
 }
 ```
 
-#### UMD module:
-Include `dist/standalone/Typist.js` into your build, using whatever build tool
-or manually entering a `<script>` tag.
-
 <a name="cssBlink"></a>
 #### CSS
 Typist contains a simple CSS file to make the cursor at the end of the text
 blink. To include it, you must include
-[`dist/Typist.css`](/dist/Typist.css) in your build.
-
+[`src/Cursor.scss`](/src/Cursor.scss) in your build.
 
 ## Children
 Typist will animate any text present in its descendents. Each text
