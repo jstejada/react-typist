@@ -1,6 +1,4 @@
 import React from 'react';
-import Backspace from './Backspace';
-import Delay from './Delay';
 
 export const sleep = (val) => new Promise((resolve) => (
   val != null ? setTimeout(resolve, val) : resolve()
@@ -34,11 +32,11 @@ export function exclude(obj, keys) {
 }
 
 export function isBackspaceElement(element) {
-  return element && element.type === Backspace;
+  return element && element.type && element.type.componentName === 'Backspace';
 }
 
 export function isDelayElement(element) {
-  return element && element.type === Delay;
+  return element && element.type && element.type.componentName === 'Delay';
 }
 
 export function extractTextFromElement(element) {
