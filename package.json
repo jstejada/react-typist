@@ -3,7 +3,10 @@
   "version": "2.0.4",
   "description": "Typing animations with React",
   "main": "dist/Typist.js",
-  "files": ["dist", "src"],
+  "files": [
+    "dist",
+    "src"
+  ],
   "scripts": {
     "dist": "webpack --config webpack.dist.config.js",
     "standalone": "webpack --config webpack.standalone.config.js",

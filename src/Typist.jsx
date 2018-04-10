@@ -13,6 +13,7 @@ export default class Typist extends Component {
   static propTypes = {
     children: PropTypes.node,
     className: PropTypes.string,
+    container: PropTypes.string,
     avgTypingDelay: PropTypes.number,
     stdTypingDelay: PropTypes.number,
     startDelay: PropTypes.number,
@@ -24,6 +25,7 @@ export default class Typist extends Component {
   }
 
   static defaultProps = {
+    container: 'div',
     className: '',
     avgTypingDelay: 70,
     stdTypingDelay: 25,
@@ -182,18 +184,19 @@ export default class Typist extends Component {
   }
 
   render() {
-    const { className, cursor } = this.props;
+    const { className, cursor, container } = this.props;
     const { isDone } = this.state;
+    const ContainerTag = container;
     const innerTree = utils.cloneElementWithSpecifiedText({
       element: this.props.children,
       textLines: this.state.textLines,
     });
 
     return (
-      <div className={`Typist ${className}`}>
+      <ContainerTag className={`Typist ${className}`}>
         {innerTree}
         <Cursor isDone={isDone} {...cursor} />
-      </div>
+      </ContainerTag>
     );
   }
 
