@@ -26,7 +26,7 @@ export default class MyComponent extends Component {
     return (
       <Typist>
         Animate this text.
-      </Typist>;
+      </Typist>
     );
   }
 }
