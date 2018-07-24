@@ -2,13 +2,18 @@
 .Typist .Cursor {
   display: inline-block;
 
-  &--blinking {
+  &[class*='--blinking'] {
     opacity: 1;
-    animation: blink 1s linear infinite;
+    animation: blink 1s step-end infinite;
     @keyframes blink {
       0% { opacity:1; }
       50% { opacity:0; }
       100% { opacity:1; }
     }
   }
+
+  &[class*='--fade'] {
+    animation: blink 1s linear infinite;
+  }
+
 }
