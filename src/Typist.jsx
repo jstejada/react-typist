@@ -87,8 +87,8 @@ export default class Typist extends Component {
   onTypingDone = () => {
     if (!this.mounted) { return; }
     if (this.props.repeat) {
-      this.state.textLines = [];
       setTimeout(() => {
+        this.setState({ textLines: [] });
         this.typeAllLines();
       }, this.props.startDelay);
     } else {
