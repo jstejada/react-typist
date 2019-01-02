@@ -71,8 +71,10 @@ export function extractTextFromElement(element) {
 export function cloneElement(element, children) {
   const tag = element.type;
   const props = exclude(element.props, ['children']);
+  const getMilliseconds = new Date().getUTCMilliseconds();
+  const randomStamp = getMilliseconds + Math.random() + Math.random();
   // eslint-disable-next-line
-  props.key = `Typist-element-${tag}-${Date.now() + Math.random() + Math.random()}`;
+  props.key = `Typist-element-${tag}-${randomStamp}`;
   return React.createElement(tag, props, ...children);
 }
 
