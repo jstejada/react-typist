@@ -4,6 +4,7 @@
   "description": "Typing animations with React",
   "main": "dist/Typist.js",
   "files": ["dist", "src"],
+  "style": "dist/Typist.css",
   "scripts": {
     "dist": "webpack --config webpack.dist.config.js",
     "standalone": "webpack --config webpack.standalone.config.js",
