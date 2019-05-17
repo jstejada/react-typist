@@ -4,7 +4,6 @@ import Typist from 'Typist';
 import './main.scss';
 
 class TypistExample extends React.Component {
-
   state = {
     renderMsg: false,
   }
@@ -19,7 +18,7 @@ class TypistExample extends React.Component {
       <div className="TypistExample">
         <Typist
           className="TypistExample-header"
-          avgTypingSpeed={40}
+          avgTypingDelay={40}
           startDelay={2000}
           onTypingDone={this.onHeaderTyped}
         >
