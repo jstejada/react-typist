@@ -21,6 +21,7 @@ export default class Typist extends Component {
     onLineTyped: PropTypes.func,
     onTypingDone: PropTypes.func,
     delayGenerator: PropTypes.func,
+    repeat: PropTypes.bool,
   }
 
   static defaultProps = {
@@ -85,8 +86,15 @@ export default class Typist extends Component {
 
   onTypingDone = () => {
     if (!this.mounted) { return; }
-    this.setState({ isDone: true });
-    this.props.onTypingDone();
+    if (this.props.repeat) {
+      setTimeout(() => {
+        this.setState({ textLines: [] });
+        this.typeAllLines();
+      }, this.props.startDelay);
+    } else {
+      this.setState({ isDone: true });
+      this.props.onTypingDone();
+    }
   }
 
   delayGenerator = (line, lineIdx, character, charIdx) => {
@@ -108,7 +116,7 @@ export default class Typist extends Component {
 
   typeAllLines(lines = this.linesToType) {
     return utils.eachPromise(lines, this.typeLine)
-    .then(() => this.onTypingDone());
+      .then(() => this.onTypingDone());
   }
 
   typeLine = (line, lineIdx) => {
@@ -130,9 +138,9 @@ export default class Typist extends Component {
     return new Promise((resolve, reject) => {
       this.setState({ textLines: this.state.textLines.concat(['']) }, () => {
         utils.eachPromise(decoratedLine, this.typeCharacter, decoratedLine, lineIdx)
-        .then(() => onLineTyped(decoratedLine, lineIdx))
-        .then(resolve)
-        .catch(reject);
+          .then(() => onLineTyped(decoratedLine, lineIdx))
+          .then(resolve)
+          .catch(reject);
       });
     });
   }
@@ -145,39 +153,39 @@ export default class Typist extends Component {
       const textLines = this.state.textLines.slice();
 
       utils.sleep(this.introducedDelay)
-      .then(() => {
-        this.introducedDelay = null;
+        .then(() => {
+          this.introducedDelay = null;
 
-        const isBackspace = character === '🔙';
-        const isDelay = character === '⏰';
-        if (isDelay) {
-          resolve();
-          return;
-        }
-
-        if (isBackspace && lineIdx > 0) {
-          let prevLineIdx = lineIdx - 1;
-          let prevLine = textLines[prevLineIdx];
-
-          for (let idx = prevLineIdx; idx >= 0; idx --) {
-            if (prevLine.length > 0 && !ACTION_CHARS.includes(prevLine[0])) {
-              break;
-            }
-            prevLineIdx = idx;
-            prevLine = textLines[prevLineIdx];
+          const isBackspace = character === '🔙';
+          const isDelay = character === '⏰';
+          if (isDelay) {
+            resolve();
+            return;
           }
 
-          textLines[prevLineIdx] = prevLine.substr(0, prevLine.length - 1);
-        } else {
-          textLines[lineIdx] += character;
-        }
+          if (isBackspace && lineIdx > 0) {
+            let prevLineIdx = lineIdx - 1;
+            let prevLine = textLines[prevLineIdx];
 
-        this.setState({ textLines }, () => {
-          const delay = this.delayGenerator(line, lineIdx, character, charIdx);
-          onCharacterTyped(character, charIdx);
-          setTimeout(resolve, delay);
+            for (let idx = prevLineIdx; idx >= 0; idx--) {
+              if (prevLine.length > 0 && !ACTION_CHARS.includes(prevLine[0])) {
+                break;
+              }
+              prevLineIdx = idx;
+              prevLine = textLines[prevLineIdx];
+            }
+
+            textLines[prevLineIdx] = prevLine.substr(0, prevLine.length - 1);
+          } else {
+            textLines[lineIdx] += character;
+          }
+
+          this.setState({ textLines }, () => {
+            const delay = this.delayGenerator(line, lineIdx, character, charIdx);
+            onCharacterTyped(character, charIdx);
+            setTimeout(resolve, delay);
+          });
         });
-      });
     });
   }
 
