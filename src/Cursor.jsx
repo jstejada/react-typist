@@ -7,6 +7,7 @@ export default class Cursor extends Component {
 
   static propTypes = {
     blink: PropTypes.bool,
+    fade: PropTypes.bool,
     show: PropTypes.bool,
     element: PropTypes.node,
     hideWhenDone: PropTypes.bool,
@@ -16,6 +17,7 @@ export default class Cursor extends Component {
 
   static defaultProps = {
     blink: true,
+    fade: true,
     show: true,
     element: '|',
     hideWhenDone: false,
@@ -70,7 +72,9 @@ export default class Cursor extends Component {
 
   render() {
     if (this.state.shouldRender) {
-      const className = this.props.blink ? ' Cursor--blinking' : '';
+      const className = this.props.blink ?
+        ` Cursor--blinking${this.props.fade ? '--fade' : ''}` :
+        '';
       return (
         <span className={`Cursor${className}`}>
           {this.props.element}
