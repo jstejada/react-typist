@@ -37,10 +37,8 @@ Include `dist/standalone/Typist.js` into your build, using whatever build tool
 or manually entering a `<script>` tag.
 
 <a name="cssBlink"></a>
-#### CSS
-Typist contains a simple CSS file to make the cursor at the end of the text
-blink. To include it, you must include
-[`dist/Typist.css`](/dist/Typist.css) in your build.
+#### SCSS
+Typist contains a simple SCSS file to make the cursor at the end of the text blink. You can find the SCSS file in [`src/Cursor.scss`] and add it into your build. If you want CSS you can use an online converter from SCSS to CSS.
 
 
 ## Children
