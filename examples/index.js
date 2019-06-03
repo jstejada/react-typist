@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Typist from 'Typist';
+import Typist from 'react-typist';
 import './main.scss';
 
 class TypistExample extends React.Component {
