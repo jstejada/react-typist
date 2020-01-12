@@ -172,6 +172,11 @@ export default class Typist extends Component {
           textLines[lineIdx] += character;
         }
 
+        if (!this.mounted) {
+          resolve();
+          return;
+        }
+
         this.setState({ textLines }, () => {
           const delay = this.delayGenerator(line, lineIdx, character, charIdx);
           onCharacterTyped(character, charIdx);
