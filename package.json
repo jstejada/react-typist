@@ -35,7 +35,7 @@
   "license": "MIT",
   "peerDependencies": {
     "react": "^0.14 || ^15.0 || ^16.0",
-    "react-dom": "^^0.14 || ^15.0 || ^16.0"
+    "react-dom": "^0.14 || ^15.0 || ^16.0"
   },
   "devDependencies": {
     "autoprefixer": "^6.3.3",
