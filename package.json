@@ -62,7 +62,7 @@
     "karma-sourcemap-loader": "^0.3.5",
     "karma-webpack": "^1.7.0",
     "mock-promises": "^0.6.1",
-    "node-sass": "^3.4.2",
+    "node-sass": "^4.13.1",
     "postcss-loader": "^0.8.2",
     "promise-mock": "^1.1.0",
     "react": "^16.0.0",
