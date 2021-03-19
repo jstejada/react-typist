@@ -40,7 +40,7 @@ or manually entering a `<script>` tag.
 #### CSS
 Typist contains a simple CSS file to make the cursor at the end of the text
 blink. To include it, you must include
-[`dist/Typist.css`](/dist/Typist.css) in your build.
+[`dist/Typist.css`](https://github.com/jstejada/react-typist/blob/69445a87314b52454f050045961ac32090739726/dist/Typist.css) in your build.
 
 
 ## Children
