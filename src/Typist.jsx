@@ -182,7 +182,7 @@ export default class Typist extends Component {
   }
 
   render() {
-    const { className, cursor } = this.props;
+    const { className, cursor, ...rest } = this.props;
     const { isDone } = this.state;
     const innerTree = utils.cloneElementWithSpecifiedText({
       element: this.props.children,
@@ -190,7 +190,7 @@ export default class Typist extends Component {
     });
 
     return (
-      <div className={`Typist ${className}`}>
+      <div className={`Typist ${className}`} {...rest}>
         {innerTree}
         <Cursor isDone={isDone} {...cursor} />
       </div>
