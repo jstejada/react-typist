@@ -36,7 +36,7 @@ class TypistExample extends React.Component {
               * Easy to customize
               <Typist.Delay ms={1250} />
               <br />
-              * Easy to use backp<Typist.Delay ms={500} />sace
+              * Easy to use backs<Typist.Delay ms={500} />pace
               <Typist.Backspace count={5} delay={1000} />
               <Typist.Delay ms={750} />
               space
