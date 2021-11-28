@@ -42,6 +42,25 @@ Typist contains a simple CSS file to make the cursor at the end of the text
 blink. To include it, you must include
 [`dist/Typist.css`](https://github.com/jstejada/react-typist/blob/69445a87314b52454f050045961ac32090739726/dist/Typist.css) in your build.
 
+## Dynamic content usage
+Provide a unique `key` prop to `Typist` so that it would re-render every time your dynamic content is changed like that:
+```
+import React, { useState } from "react";
+import Typist from "react-typist";
+
+export default const DynamicTypist = () => {
+  const texts = ["first text", "second text", "third text"];
+  const [currentTextCounter, setCurrentTextCounter] = useState(0);
+
+  return <div onClick={() => if (currentTextCounter < texts.length - 1) { setCurrentTextCounter(currentTextCounter + 1) }}>
+    <Typist key={currentTextCounter}>
+      {texts[currentTextCounter]}
+    </Typist>
+  </div>
+}
+```
+
+Otherwise your dynamic content **won't** be reflected and re-typed.
 
 ## Children
 Typist will animate any text present in its descendents. Each text
