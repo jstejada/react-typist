@@ -193,7 +193,7 @@ Object containing options for cursor:
 * `blink (bool)`: whether to add blinking animation to cursor. You must also
 include the [css](#cssBlink)
 * `element (string)`: character to use for the cursor
-* `hideWhenDone (bool)`: whether the cursor should be hidden after tyiping
+* `hideWhenDone (bool)`: whether the cursor should be hidden after typing
 animation is complete.
 * `hideWhenDoneDelay (int)`: delay in ms to be applied before hiding cursor when
 typing animation is complete.
@@ -233,7 +233,7 @@ distribution, for example uniform (e.g. always 100ms), or a deterministic
 distribution.
 
 However, if you wish to insert delays at specific points in the animation,
-consider useing the [`Delay`](#typistdelay) Component instead.
+consider using the [`Delay`](#typistdelay) Component instead.
 
 ```js
 function(mean, std, current = {line, lineIdx, character, charIdx, defDelayGenerator}) {
