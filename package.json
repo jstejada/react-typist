@@ -55,7 +55,7 @@
     "extract-text-webpack-plugin": "^1.0.1",
     "jasmine-core": "^2.3.4",
     "jasmine-react-matchers": "^1.0.2",
-    "karma": "^0.13.10",
+    "karma": "^6.3.14",
     "karma-chrome-launcher": "^0.2.0",
     "karma-cli": "^0.1.1",
     "karma-jasmine": "^0.3.6",
